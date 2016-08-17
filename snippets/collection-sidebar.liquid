@@ -1,0 +1,12 @@
+{% if settings.collection_sidebar_links_enable %}
+
+<h3>{{ 'collections.sidebar.catalog' | t }}</h3>
+<ul>
+
+{% for link in navigation[settings.collection_sidebar_linklist].links %}
+  <li><a href="{{ link.url }}">{{ link.name }}</a></li>
+{% endfor %}
+
+</ul>
+
+{% endif %}

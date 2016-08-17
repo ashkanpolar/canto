@@ -1,0 +1,78 @@
+<!-- begin list search results-->
+
+{% comment %}
+Check if the product is on sale and set a variable to be used below.
+{% endcomment %}
+{% assign on_sale = false %}
+{% if item.base_price > item.price %}
+    {% assign on_sale = true %}
+{% endif %}
+
+{% comment %}
+Check if the product is sold out and set a variable to be used below.
+{% endcomment %}
+{% assign sold_out = true %}
+{% if item.available  %}
+    {% assign sold_out = false %}
+{% endif %}
+
+<div class="grid__item">
+    <div class="grid">
+        {% if item.type == 'product' %}
+        <div class="grid__item one-third">
+            <a href="{{ item.url | within: collection }}" title="{{ item.title | escape }}">
+                {% if item.images.size == 0 %}
+                    {{ 'no-image.png' | asset_url | img_tag }}
+                {% else %}
+                    {{ item.main_image.src | img_url: 'medium' | img_tag }}
+                {% endif %}
+            </a>
+        </div>
+        {% endif %}
+
+        {% comment %}
+        If it is not product, add a push-- class to keep the alignment the same
+        {% endcomment %}
+        <div class="grid__item two-thirds {% unless item.type == "product" %}push--one-third{% endunless %}">
+            <h3>{{ item.title | link_to: item.url }}</h3>
+
+            {% if item.price %}
+                <p>
+                    {% comment %}
+                    You can show a leading 'from' or 'up to' by checking 'product.price_varies'
+                    if your variants have different prices.
+                    {% endcomment %}
+                    {% if on_sale %}
+                        {% if item.price_varies %}
+                            {% assign sale_price = item.price | money %}
+                            {{ 'products.product.on_sale_from_html' | t: price: sale_price }}
+                        {% else %}
+                            <strong>{{ 'products.product.on_sale' | t }}</strong>
+                            <span itemprop="price">{{ item.price | money }}</span>
+                        {% endif %}
+                    {% else %}
+                        {% if item.price_varies %}
+                            <span itemprop="price">{{ 'products.general.from' | t }} {{ item.price | money }}</span>
+                        {% else %}
+                            <span itemprop="price">{{ item.price | money }}</span>
+                        {% endif %}
+                    {% endif %}
+                    {% if sold_out %}
+                        <br><strong>{{ 'products.product.sold_out' | t }}</strong>
+                    {% endif %}
+                    {% if on_sale %}
+                        <br><span class="visually-hidden">{{ 'products.general.sale_price' | t }}</span><s>{{ item.compare_at_price | money }}</s>
+                    {% endif %}
+                </p>
+            {% endif %}
+
+            {% comment %}
+            Get a brief excerpt of raw text from the page/product
+            {% endcomment %}
+            <p>{{ item.content | strip_html | truncatewords: 50 }}</p>
+        </div>
+    </div>
+    {% unless forloop.last %}<hr>{% endunless %}
+</div>
+
+<!-- //list search results-->

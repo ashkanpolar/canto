@@ -1,0 +1,29 @@
+<!-- /snippets/breadcrumb.liquid -->
+
+{% unless template == 'index' or template == 'cart' %}
+<nav class="breadcrumb" role="navigation" aria-label="breadcrumbs">
+  <a href="/" title="{{ 'general.breadcrumbs.home_link_title' | t }}">{{ 'general.breadcrumbs.home' | t }}</a>
+
+  {% if template contains 'product' %}
+    {% if collection %}
+    <span aria-hidden="true">&rsaquo;</span>
+    <a href="{{ collection.url }}">{{ collection.name }}</a>
+    {% endif %}
+
+    <span aria-hidden="true">&rsaquo;</span>
+    <span>{{ product.name }}</span>
+
+  {% elsif template contains 'search' %}
+
+    <span aria-hidden="true">&rsaquo;</span>
+    <span>{{ 'general.breadcrumbs.search' | t }}</span>
+
+  {% elsif template contains 'collection' %}
+
+    <span aria-hidden="true">&rsaquo;</span>
+    <span>{{ collection.name }}</span>
+
+  {% endif %}
+
+</nav>
+{% endunless %}

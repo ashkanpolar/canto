@@ -1,0 +1,68 @@
+<!-- /templates/contact.liquid -->
+{% comment %}
+Contact us page
+{% endcomment %}
+
+<div class="grid">
+
+  <div class="grid__item large--two-thirds push--large--one-sixth">
+
+    <h1>{{ 'contact.general.title' | t }}</h1>
+
+    {% comment %}
+    Regular page content goes here.
+    {% endcomment %}
+    <div class="rte">
+      {% if settings.contact_details != blank %}
+        <p>
+          {{ settings.contact_details }}
+        </p>
+      {% endif %}
+    </div>
+
+    {% comment %}
+    Contact form starts here
+    {% endcomment %}
+    <div class="form-vertical">
+      {% form 'contact' %}
+
+      {% comment %}
+      Successful message
+      {% endcomment %}
+      {% if form.posted_successfully %}
+        <p class="note form-success">
+          {{ 'contact.form.post_success' | t }}
+        </p>
+      {% endif %}
+
+      {% if form.errors.size > 0 %}
+        <div class="errors form-error">
+          <p>{{ 'contact.form.has_errors' | t: count: form.errors.size }}</p>
+          <ul>
+          {% for error in form.errors %}
+            {% if error.field == blank %}
+              <li>{{ error.message }}</li>
+            {% else %}
+              <li>{{ error.field | capitalize }}: {{ error.message }}</li>
+            {% endif %}
+          {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+
+      <label for="contactFormName" class="hidden-label">{{ 'contact.form.name' | t }}</label>
+      <input type="text" id="contactFormName" class="input-full" name="contact[name]" required placeholder="{{ 'contact.form.name' | t }}" {# (commented out for now due to bug in WebKit in iOS) autocapitalize="words" #} value="{% if form.name and form.posted_successfully == empty %}{{ form.name }}{% endif %}">
+
+      <label for="contactFormEmail" class="hidden-label">{{ 'contact.form.email' | t }}</label>
+      <input type="email" id="contactFormEmail" class="input-full" name="contact[email]" required placeholder="{{ 'contact.form.email' | t }}" autocorrect="off" autocapitalize="off" value="{% if form.email and form.posted_successfully == empty %}{{ form.email }}{% endif %}">
+
+      <label for="contactFormMessage" class="hidden-label">{{ 'contact.form.message' | t }}</label>
+      <textarea rows="10" id="contactFormMessage" class="input-full" name="contact[message]" required placeholder="{{ 'contact.form.message' | t }}">{% if form.message and form.posted_successfully == empty %}{{ form.message }}{% endif %}</textarea>
+
+      <input type="submit" class="btn right" value="{{ 'contact.form.submit' | t }}">
+
+      {% endform %}
+    </div>
+
+  </div>
+</div>

@@ -1,0 +1,14 @@
+<!-- /snippets/pagination-custom.liquid -->
+<ul class="pagination-custom">
+  {% if paginate.previous %}
+    <li><a href="{{ paginate.previous.url }}" title="{{ paginate.previous.title }}">&larr;</a></li>
+  {% else %}
+    <li class="disabled"><span>&larr;</span></li>
+  {% endif %}
+
+  {% if paginate.next %}
+    <li><a href="{{ paginate.next.url }}" title="{{ paginate.next.title }}">&rarr;</a></li>
+  {% else %}
+    <li class="disabled"><span>&rarr;</span></li>
+  {% endif %}
+</ul>

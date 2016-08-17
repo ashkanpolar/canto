@@ -1,0 +1,181 @@
+<!-- /templates/product.liquid -->
+
+<div itemscope itemtype="http://schema.org/Product">
+
+  <meta itemprop="url" content="{{ store.url }}{{ product.url }}">
+  <meta itemprop="image" content="{{ product.main_image.src | img_url: 'large' }}">
+
+  {% include 'breadcrumb' %}
+
+  <div class="grid product-single gallery mode-zoom" >
+    <div class="grid__item large--one-half text-center">
+      <div class="product-single__photos main" id="ProductPhoto">
+        {% assign main_image = product.main_image %}
+        <img src="{{ main_image | img_url: 'master' }}" id="ProductPhotoImg">
+      </div>
+
+      {% comment %}
+        Create thumbnails if we have more than one product image
+      {% endcomment %}
+      {% if product.images.size > 1 %}
+        <ul class="product-single__thumbnails grid-uniform" id="ProductThumbs">
+
+          {% for image in product.images %}
+            <li class="grid__item one-quarter thumbs">
+              <a class="thumb" title="{{ product.name | escape }}" href="{{ image | product_img_url: 'original' }}">
+                <img src="{{ image.src | img_url: 'medium' }}" alt="{{ product.name | escape }}">
+              </a>
+            </li>
+          {% endfor %}
+
+        </ul>
+      {% endif %}
+    </div>
+
+    {% comment %}
+        Load thumbnail into main Img
+    {% endcomment %}
+    <script>
+    $(".thumbs a").click(function(evt) {
+        evt.preventDefault();
+        $("#ProductPhoto").empty().append(
+            $("<img>", { src: this.href})
+        );
+    });
+    </script>
+
+
+    <div class="grid__item large--one-half">
+      <h1 itemprop="name">{{ product.name }}</h1>
+      <div itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+        <meta itemprop="priceCurrency" content="{{ store.currency }}">
+        <link itemprop="availability" href="http://schema.org/{% if product.available %}InStock{% else %}OutOfStock{% endif %}">
+
+    {% if product.available %}
+
+      <form action="{{ urls.cart_add }}" method="post" enctype="multipart/form-data" id="AddToCartForm">
+
+        <span id="ProductPrice" class="h2{% if product.base_price > product.price %} on-sale{% endif %}" itemprop="price">
+          {{ product.price | money }}
+        </span>
+
+        {% if product.base_price > product.price %}
+          <p id="ComparePrice">
+            {{ 'products.product.base' | t }} {{ product.base_price | money }}
+          </p>
+        {% endif %}
+
+        {% if product.has_variants %}
+
+          {% comment %}
+            Product option selectors
+          {% endcomment %}
+          {% for name, values in product.options %}
+            <label for="option-{{ name | md5 }}">{{ name|title }}</label>
+            <select id="option-{{ name | md5 }}" class="option-selector" style="width:100%;margin-bottom:10px;">
+            {% for value in values %}
+              <option value="{{ value | md5 }}">{{ value }}</option>
+            {% endfor %}
+            </select>
+          {% endfor %}
+
+          {% comment %}
+            Product variants data
+          {% endcomment %}
+          <script>
+          var variantsData = {};
+          {% for variant in product.variants %}
+          variantsData[{{ variant.id }}] = {
+            {% for option,value in variant.options %}
+            '{{ option | md5 }}': '{{ value | md5 }}',
+            {% endfor %}
+            'price': '{{ variant.price | money }}',
+            'is_available': {% if variant.available %}true{% else %}false{% endif %}
+          };
+          {% endfor %}
+
+          $(".option-selector").change(function() {
+            for (var id in variantsData) {
+              {% for name, values in product.options %}
+                if (variantsData[id]['{{ name | md5 }}'] != $('#option-{{ name | md5 }}').val()) { continue; }
+              {% endfor %}
+              // Found matching variant, select it
+              selectVariant(id);
+              return;
+            }
+            // No variant available, select nothing
+            selectVariant(null);
+          });
+
+          function selectVariant(id) {
+            var price, isDisabled, addToCartText;
+            if (id) {
+              if (variantsData[id]['is_available']) {
+                price = variantsData[id]['price'];
+                addToCartText = '{{ 'products.product.add_to_cart' | t }}';
+                isDisabled = false;
+              } else {
+                price = variantsData[id]['price'];
+                addToCartText = '{{ 'products.product.sold_out' | t }}';
+                isDisabled = true;
+              }
+            } else {
+              price = addToCartText = '{{ 'products.product.unavailable' | t }}';
+              isDisabled = true;
+            }
+
+            $('input[name="id"]').val(id);
+            $('#ProductPrice').html(price);
+            $('#X_AddToCart').attr('disabled', isDisabled);
+            $('#AddToCartText').html(addToCartText);
+          }
+
+          $(function() {
+            // Select variant
+            {% if product.first_available_variant %}
+              {% assign variant = product.first_available_variant %}
+            {% else %}
+              {% assign variant = product.variants[0] %}
+            {% endif %}
+            {% for option,value in variant.options %}
+            $('#option-{{ option | md5 }}').val('{{ value | md5 }}');
+            {% endfor %}
+            selectVariant({{ variant.id }});
+          });
+
+          </script>
+
+          <input type="hidden" name="id" value="" />
+
+        {% else %}
+
+          <input type="hidden" name="id" value="{{ product.master_variant.id }}" />
+
+        {% endif %}
+
+        <label for="Quantity" class="quantity-selector">{{ 'products.product.quantity' | t }}</label>
+        <input type="number" id="Quantity" name="quantity" value="1" min="1" class="quantity-selector" style="width:100%;margin-bottom:10px;" >
+
+        <button type="submit" name="add" id="X_AddToCart" class="btn">
+          <span id="AddToCartText">{{ 'products.product.add_to_cart' | t }}</span>
+        </button>
+      </form>
+
+    {% else %}
+
+      <p><strong>{{ 'products.product.sold_out' | t }}</strong></p>
+
+    {% endif %}
+
+      </div>
+
+      <hr>
+
+      <div class="product-description rte" itemprop="description">
+        {{ product.description }}
+      </div>
+
+    </div>
+  </div>
+
+</div>

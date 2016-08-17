@@ -1,0 +1,80 @@
+
+# Alpaca Theme by [Vend](http://www.vendhq.com) using [Timber](http://shopify.github.io/Timber/)
+
+## Settings
+
+Theme settings allow designers to provide an easy way for any user to customize the look and feel of their store without having to delve into HTML or CSS code.
+
+##Colors
+
+### General Colors
+
+Primary Color - Used for text links, and primary buttons
+
+Secondary Color - Used for secondary buttons
+
+Body Background - The background of the page
+
+Border Colors - Used on tables and lines
+
+### Body Text
+
+Body Text - The colour used in general body content
+
+### Footer
+
+Footer Background - Background colour for footer background
+
+Footer text - The colour of your footer text
+
+Social Icons - The social icons colour
+
+## Header
+### Logo
+Upload a logo which will appear throughout the site. Good dimensions are about 200px which can either be portrait or landscape
+
+### Favion
+Used on the browser location bar.
+
+## Homepage Options
+###Static Banner
+This will be the main banner which appears on your homepage 950px x 300px are good dimensions
+
+###Slider
+
+Enable up to 3 slider images which will appear on your homepage 950px x 300px are good dimensions. You can add a URL which you can target, this can be the slug for a collection, product or page.
+
+
+
+## Footer
+### Quick links
+Quick links are are navigation list which appear on the footer, you can target a specific navigation list.
+
+### Social Media Links
+These appear in the footer, only the populated fields will be displayed
+
+### Newsletter field
+Enter your MailChimp form action URL which can be obtained as follows:
+- Login to MailChimp
+- Click on the List you want people to subscribe to
+- Select Signup Forms, then embedded forms
+- Select ‘naked’
+- Then scroll down to the spot where it says “copy this into your site”
+
+Find the part where it reads  action=“….. grab the URL and put this in the MailChimp field under your theme settings
+
+## Social Sharing
+Add the Twitter handle you would like to use for your online store
+
+## Collections Siderbar
+This is the sidebar which shows on the collections page, you can choose to enable or disable this and specify which navifation list you would like to target.
+
+# How can I add arbitrary links?
+
+You may want to add several links, like a link to your terms or a friend's store. To do this, we need to create a link list. To do so, follow those steps:
+
+1. Go to your Vend store dashboard.
+2. On the left sidebar, click on "Design", then ""Navigation".
+3. Click on the "Create a new navigation list" button.
+4. In the "Name" field, enter what you want, like "Footer Links". Copy the "Handle" value somewhere (you'll need it later).
+5. Add the links you want, and save.

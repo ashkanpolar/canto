@@ -1,0 +1,66 @@
+<!-- /templates/search.liquid -->
+
+{% comment %}
+Search results
+{% endcomment %}
+
+{% comment %}
+Set grid_results to true and set search results as a grid instead of a list.
+This works well when your search is only for products.
+{% endcomment %}
+{% assign grid_results = false %}
+
+{% comment %}
+Avoid accessing search.results before the opening paginate tag to improve rendering speed.
+{% endcomment %}
+{% paginate search.results by 10 %}
+
+<div class="grid">
+  <div class="grid__item large--three-quarters push--large--one-eighth">
+
+    {% if search.performed %}
+      {% if search.results_count == 0 %}
+        <h1 class="text-center">{{ 'general.search.no_results_html' | t: terms: search.terms }}</h1>
+      {% else %}
+        <h1 class="text-center">{{ 'general.search.results_for_html' | t: terms: search.terms }}</h1>
+      {% endif %}
+    {% else %}
+      <h1 class="text-center">{{ 'general.search.title' | t }}</h1>
+    {% endif %}
+
+    {% include 'search-bar' %}
+
+    {% if search.performed %}
+
+      <hr class="hr--clear">
+
+      <div class="section-header">
+        <div class="section-header__right">
+          {% include 'search-sorting' %}
+        </div>
+      </div>
+
+      <div class="grid-uniform">
+        {% for item in search.results %}
+
+          {% if grid_results == false %}
+            {% include 'search-result-list-item' %}
+          {% else %}
+            {% include 'search-result-grid-item' %}
+          {% endif %}
+
+        {% endfor %}
+      </div>
+
+      {% if paginate.pages > 1 %}
+        <div class="text-center">
+          {% include 'pagination-custom' %}
+        </div>
+      {% endif %}
+
+    {% endif %}
+
+  </div>
+</div>
+
+{% endpaginate %}

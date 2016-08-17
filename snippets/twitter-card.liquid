@@ -1,0 +1,35 @@
+<!-- /snippets/twitter-card.liquid -->
+{% comment %}
+
+This snippet renders meta data needed to create a Twitter card
+for products and articles.
+
+Your cards must be approved by Twitter to be activated
+- https://dev.twitter.com/docs/cards/validation/validator
+
+More information:
+- https://dev.twitter.com/docs/cards/types/product-card
+- https://dev.twitter.com/docs/cards/types/summary-card
+
+{% endcomment %}
+
+{% comment %}
+Twitter user name of the site, based on theme settings
+{% endcomment %}
+{% if settings.twittercard_handle and settings.twittercard_handle != '@' %}
+  <meta name="twitter:site" content="{{settings.twittercard_handle}}">
+{% endif %}
+{% if template contains 'product' %}
+  <meta name="twitter:card" content="product">
+  <meta name="twitter:title" content="{{ product.name }}">
+  <meta name="twitter:description" content="{{ product.description | strip_html | strip_newlines | truncate: 140, '' | escape }}">
+  {% if product.main_image %}
+    <meta name="twitter:image" content="{{ product.main_image.src | img_url: 'large' }}">
+    <meta name="twitter:image:width" content="150">
+    <meta name="twitter:image:height" content="150">
+  {% endif %}
+  <meta name="twitter:label1" content="Price">
+  <meta name="twitter:data1" content="{% if product.price_varies %}From {% endif %}{{ product.price | money_with_currency | strip_html | escape }}">
+  <meta name="twitter:label2" content="Availability">
+  <meta name="twitter:data2" content="{% if product.available %}In stock{% else %}Out of stock{% endif %}">
+{% endif %}

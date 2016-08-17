@@ -1,0 +1,31 @@
+<!-- /snippets/collection-sorting.liquid -->
+<div class="form-horizontal">
+  <select name="SortBy" id="SortBy">
+  
+    <option value="">{{ 'collections.sorting.title' | t }}</option>
+    <option value="">---------------</option>
+  
+    <option value="title-ascending">{{ 'collections.sorting.az' | t }}</option>
+    <option value="title-descending">{{ 'collections.sorting.za' | t }}</option>
+
+{% comment %}
+Not available yet
+    <option value="price-ascending">{{ 'collections.sorting.price_ascending' | t }}</option>
+    <option value="price-descending">{{ 'collections.sorting.price_descending' | t }}</option>
+{% endcomment %}
+
+    <option value="created-descending">{{ 'collections.sorting.date_descending' | t }}</option>
+    <option value="created-ascending">{{ 'collections.sorting.date_ascending' | t }}</option>
+  </select>
+</div>
+
+<script>
+$(function(){
+    $('#SortBy').change(function(){
+        var url = '{{ collection.url }}';
+        var separator = url.indexOf('?') !== -1 ? '&' : '?';
+        url += separator + "sort_by=" + $(this).val();
+        window.location = url;
+    });
+});
+</script>

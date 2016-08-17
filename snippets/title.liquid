@@ -1,0 +1,42 @@
+<!-- /snippets/title.liquid -->
+
+{% comment %}
+Page title
+{% endcomment %}
+<title>
+    {% if template contains 'product' %}
+        {{ product.name }} |
+        {% if collection %}
+            {{ collection.name }} |
+        {% endif %}
+    {% elsif template contains 'collection' %}
+        {{ collection.name }} |
+    {% elsif template contains 'page' %}
+        {{ page.name }} |
+    {% elsif template contains 'search' %}
+        {{ 'general.breadcrumbs.search' | t }} |
+    {% elsif template contains 'cart' %}
+        {{ 'cart.general.title' | t }} |
+    {% elsif template contains 'contact' %}
+        {{ 'contact.general.title' | t }} |
+    {% endif %}
+    {% if store.meta_title %}{{ store.meta_title | escape }}{% else %}{{ store.name }}{% endif %}
+</title>
+
+{% comment %}
+Meta description
+{% endcomment %}
+{% if template contains 'product' and product.description != '' %}
+    <meta name="description" content="{{ product.description | strip_html | strip_newlines | truncate: 160, '' | escape }}">
+{% elsif template contains 'collection' and collection.description != '' %}
+    <meta name="description" content="{{ collection.description | strip_html | strip_newlines | truncate: 160, '' | escape }}">
+{% elsif template contains 'page' %}
+    <meta name="description" content="{{ page.content | strip_html | strip_newlines | truncate: 160, '' | escape }}">
+{% elsif store.meta_description %}
+    <meta name="description" content="{{ store.meta_description | escape }}">
+{% endif %}
+
+{% comment %}
+Meta keywords
+{% endcomment %}
+{% if store.meta_keywords %}<meta name="keywords" content="{{ store.meta_keywords | escape }}">{% endif %}
