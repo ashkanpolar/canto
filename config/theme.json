@@ -1,9 +1,9 @@
 {
-	"theme_name": "Alpaca",
-	"theme_description": "A nice clean theme",
-	"theme_version": "2.4",
-	"theme_date": "2016-02-01",
-	"developer_name": "Vend",
-	"developer_email": "support@vendhq.com",
-	"developer_website": "https://www.vendhq.com"
+	"theme_name": "Canto",
+	"theme_description": "A minimal theme for Canto based on Alpaca Theme by Vend",
+	"theme_version": "1.0",
+	"theme_date": "2016-08-22",
+	"developer_name": "Ashkan Polar",
+	"developer_email": "ashkanpolar@gmail.com",
+	"developer_website": ""
 }
