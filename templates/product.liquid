@@ -10,8 +10,12 @@
   <div class="grid product-single gallery mode-zoom" >
     <div class="grid__item large--one-half text-center">
       <div class="product-single__photos main" id="ProductPhoto">
-        {% assign main_image = product.main_image %}
-        <img src="{{ main_image | img_url: 'master' }}" id="ProductPhotoImg">
+        {% if product.images.size == 0 %}
+          {{ 'no-image.png' | asset_url | img_tag }}
+        {% else %}
+          {% assign main_image = product.main_image %}
+          <img src="{{ main_image | img_url: 'master' }}" id="ProductPhotoImg">
+        {% endif %}
       </div>
 
       {% comment %}

@@ -65,9 +65,9 @@ $colorPrimary: {{ settings.color_primary }};
 $colorSecondary: {{ settings.color_secondary }};
 
 // Button colors
-$colorBtnPrimary: $colorPrimary;
-$colorBtnPrimaryHover: lighten($colorBtnPrimary, 10%);
-$colorBtnPrimaryActive: lighten($colorBtnPrimaryHover, 10%);
+$colorBtnPrimary: $colorSecondary;
+$colorBtnPrimaryHover: lighten($colorSecondary, 10%);
+$colorBtnPrimaryActive: $colorBtnPrimaryHover;
 $colorBtnPrimaryText: {{ settings.color_primary }};
 
 $colorBtnSecondary: $colorSecondary;
