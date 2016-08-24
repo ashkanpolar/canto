@@ -47,10 +47,10 @@ $preLarge: $large - $viewportIncrement;
 
 /*================ The following are dependencies of csswizardry grid ================*/
 $breakpoints: (
-  'small' '(max-width: #{$small})',
-  'medium' '(min-width: #{$postSmall}) and (max-width: #{$medium})',
-  'medium-down' '(max-width: #{$medium})',
-  'large' '(min-width: #{$large})'
+        'small' '(max-width: #{$small})',
+        'medium' '(min-width: #{$postSmall}) and (max-width: #{$medium})',
+        'medium-down' '(max-width: #{$medium})',
+        'large' '(min-width: #{$large})'
 );
 $breakpoint-has-widths: ('small', 'medium', 'medium-down', 'large');
 $breakpoint-has-push:  ('medium', 'medium-down', 'large');
@@ -60,23 +60,23 @@ $breakpoint-has-pull:  ('medium', 'medium-down', 'large');
   #General Variables
 ==============================================================================*/
 
-// Timber Colors
+// Canto Colors
 $colorPrimary: {{ settings.color_primary }};
 $colorSecondary: {{ settings.color_secondary }};
 
 // Button colors
 $colorBtnPrimary: $colorPrimary;
-$colorBtnPrimaryHover: darken($colorBtnPrimary, 10%);
-$colorBtnPrimaryActive: darken($colorBtnPrimaryHover, 10%);
-$colorBtnPrimaryText: #fff;
+$colorBtnPrimaryHover: lighten($colorBtnPrimary, 10%);
+$colorBtnPrimaryActive: lighten($colorBtnPrimaryHover, 10%);
+$colorBtnPrimaryText: {{ settings.color_primary }};
 
 $colorBtnSecondary: $colorSecondary;
 $colorBtnSecondaryHover: darken($colorBtnSecondary, 10%);
 $colorBtnSecondaryActive: darken($colorBtnSecondaryHover, 10%);
-$colorBtnSecondaryText: #fff;
+$colorBtnSecondaryText: {{ settings.color_primary }};
 
 // Text link colors
-$colorLink: $colorPrimary;
+$colorLink: {{ settings.color_body_text }};
 $colorLinkHover: lighten($colorPrimary, 15%);
 
 // Text colors
@@ -114,9 +114,9 @@ $drawerTransition: 'all 0.4s cubic-bezier(0.46, 0.01, 0.32, 1)';
 
 // Sizing variables
 $siteWidth: 1180px;
-$gutter: 30px;
-$gridGutter: 30px; // can be a %, but nested grids will have smaller margins because of it
-$radius: 3px;
+$gutter: 40px;
+$gridGutter: 40px; // can be a %, but nested grids will have smaller margins because of it
+$radius: 0px;
 
 // Z-index
 $zindexNavDropdowns: 5;
@@ -124,11 +124,12 @@ $zindexDrawer: 10;
 
 /*================ Typography ================*/
 
-$headerFontStack: 'HelveticaNeue', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+@import 'https://fonts.googleapis.com/css?family=Quicksand';
+$headerFontStack: 'Quicksand', 'HelveticaNeue', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 $headerFontWeight: 700;
 
-$bodyFontStack: 'HelveticaNeue', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-$baseFontSize: 14px; // Henseforth known as 1em
+$bodyFontStack: 'Quicksand', 'HelveticaNeue', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+$baseFontSize: 16px; // Henseforth known as 1em
 
 @font-face {
   font-family: 'icons';
@@ -243,6 +244,17 @@ $max: max-width;
   @include box-sizing();
 }
 
+//
+// 1. Change the default font family in all browsers (opinionated).
+// 2. Prevent adjustments of font size after orientation changes in IE and iOS.
+//
+
+html {
+  font-family: sans-serif; // 1
+  -ms-text-size-adjust: 100%; // 2
+  -webkit-text-size-adjust: 100%; // 2
+}
+
 html, body {
   padding: 0;
   margin: 0;
@@ -257,14 +269,94 @@ audio, canvas, progress, video {
   vertical-align: baseline;
 }
 
-input[type="number"]::-webkit-inner-spin-button,
-input[type="number"]::-webkit-outer-spin-button {
-  height: auto;
+audio:not([controls]) {
+  display: none;
+  height: 0;
 }
 
-input[type="search"]::-webkit-search-cancel-button,
-input[type="search"]::-webkit-search-decoration {
-  -webkit-appearance: none;
+//
+// Remove the gray background on active links in IE 10.
+//
+
+a {
+  background-color: transparent;
+}
+
+//
+// Remove the outline on focused links when they are also active or hovered
+// in all browsers (opinionated).
+//
+
+a:active,
+a:hover {
+  outline-width: 0;
+}
+
+//
+// Remove the border on images inside links in IE 10-.
+//
+
+img {
+  border-style: none;
+}
+
+//
+// Hide the overflow in IE.
+//
+
+svg:not(:root) {
+  overflow: hidden;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+//
+// Restore the font weight unset by the previous rule.
+//
+
+optgroup {
+  font-weight: bold;
+}
+
+//
+// Show the overflow in IE.
+// 1. Show the overflow in Edge.
+// 2. Show the overflow in Edge, Firefox, and IE.
+//
+
+button,
+input, // 1
+select { // 2
+  overflow: visible;
+}
+
+//
+// Remove the margin in Safari.
+// 1. Remove the margin in Firefox and Safari.
+//
+
+button,
+input,
+select,
+textarea { // 1
+  margin: 0;
+}
+
+//
+// Remove the margin in Safari.
+// 1. Remove the margin in Firefox and Safari.
+//
+
+button,
+input,
+select,
+textarea { // 1
+  margin: 0;
 }
 
 /*============================================================================
