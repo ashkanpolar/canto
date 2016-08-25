@@ -48,13 +48,51 @@ $preLarge: $large - $viewportIncrement;
 /*================ The following are dependencies of csswizardry grid ================*/
 $breakpoints: (
         'small' '(max-width: #{$small})',
-        'medium' '(min-width: #{$postSmall}) and (max-width: #{$medium})',
+        'medium' '(min-width: #{$postSmall})',
         'medium-down' '(max-width: #{$medium})',
         'large' '(min-width: #{$large})'
 );
 $breakpoint-has-widths: ('small', 'medium', 'medium-down', 'large');
 $breakpoint-has-push:  ('medium', 'medium-down', 'large');
 $breakpoint-has-pull:  ('medium', 'medium-down', 'large');
+
+// Grid breakpoints
+//
+// Define the minimum and maximum dimensions at which your layout will change,
+// adapting to different screen sizes, for use in media queries.
+
+$grid-breakpoints: (
+    // Extra small screen / phone
+        xs: 0,
+    // Small screen / phone
+        sm: 544px,
+    // Medium screen / tablet
+        md: 768px,
+    // Large screen / desktop
+        lg: 992px,
+    // Extra large screen / wide desktop
+        xl: 1200px
+) !default;
+
+
+// Grid containers
+//
+// Define the maximum width of `.container` for different screen sizes.
+
+$container-max-widths: (
+        sm: 576px,
+        md: 720px,
+        lg: 940px,
+        xl: 1140px
+) !default;
+
+
+// Grid columns
+//
+// Set the number of columns and specify the width of the gutters.
+
+$grid-columns: 12 !default;
+$grid-gutter-width: rem(40px);
 
 /*============================================================================
   #General Variables
@@ -129,7 +167,7 @@ $headerFontStack: 'Quicksand', 'HelveticaNeue', 'Helvetica Neue', Helvetica, Ari
 $headerFontWeight: 700;
 
 $bodyFontStack: 'Quicksand', 'HelveticaNeue', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-$baseFontSize: 16px; // Henseforth known as 1em
+$baseFontSize: 16px; // Henseforth known as 1em/rem
 
 @font-face {
   font-family: 'icons';
@@ -204,6 +242,12 @@ $socialIconFontStack: 'icons';
     @return 0;
   }
   @return $target / $context + 0em;
+}
+@function rem($target) {
+  @if $target == 0 {
+    @return 0;
+  }
+  @return $target / $baseFontSize + 0rem;
 }
 
 @function color-control($color) {
@@ -750,6 +794,94 @@ $class-type: unquote(".");
 }
 
 /*============================================================================
+  #Flex Grid Setup
+    - Based on bootstrap 4 flexbox grid
+    - Breakpoints defined above, under #Breakpoint and Grid Variables
+==============================================================================*/
+
+// Flex Grid Settings
+//
+// Necessary grid settings for flexbox grid
+
+$enable-flex: true !default;
+
+/// Grid system
+//
+// Generate semantic grid columns with these mixins.
+
+@mixin make-container($gutter: $grid-gutter-width) {
+  margin-left: auto;
+  margin-right: auto;
+  padding-left:  ($gutter / 2);
+  padding-right: ($gutter / 2);
+  @if not $enable-flex {
+    @include clearfix();
+  }
+}
+
+
+// For each breakpoint, define the maximum width of the container in a media query
+@mixin make-container-max-widths($max-widths: $container-max-widths) {
+  @each $breakpoint, $container-max-width in $max-widths {
+    @include media-breakpoint-up($breakpoint) {
+      max-width: $container-max-width;
+    }
+  }
+}
+
+@mixin make-row($gutter: $grid-gutter-width) {
+  @if $enable-flex {
+    display: flex;
+    flex-wrap: wrap;
+  } @else {
+    @include clearfix();
+  }
+  margin-left:  ($gutter / -2);
+  margin-right: ($gutter / -2);
+}
+
+@mixin make-col($gutter: $grid-gutter-width) {
+  position: relative;
+  @if not $enable-flex {
+    float: left;
+  }
+  min-height: 1px;
+  padding-left:  ($gutter / 2);
+  padding-right: ($gutter / 2);
+}
+
+@mixin make-col-span($size, $columns: $grid-columns) {
+  @if $enable-flex {
+    flex: 0 0 percentage($size / $columns);
+  } @else {
+    width: percentage($size / $columns);
+  }
+}
+
+@mixin make-col-offset($size, $columns: $grid-columns) {
+  margin-left: percentage($size / $columns);
+}
+
+@mixin make-col-push($size, $columns: $grid-columns) {
+  left: if($size > 0, percentage($size / $columns), auto);
+}
+
+@mixin make-col-pull($size, $columns: $grid-columns) {
+  right: if($size > 0, percentage($size / $columns), auto);
+}
+
+@mixin make-col-modifier($type, $size, $columns) {
+  // Work around the lack of dynamic mixin @include support (https://github.com/sass/sass/issues/626)
+  @if $type == push {
+    @include make-col-push($size, $columns);
+  } @else if $type == pull {
+    @include make-col-pull($size, $columns);
+  } @else if $type == offset {
+    @include make-col-offset($size, $columns);
+  }
+}
+
+/*============================================================================
   #Basic Styles
 ==============================================================================*/
 html {
@@ -845,29 +977,29 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
-/*================ Use em() Sass function to declare font-size ================*/
+/*================ Use rem() Sass function to declare font-size ================*/
 h1 {
-  font-size: em(36px);
+  font-size: rem(36px);
 }
 
 h2 {
-  font-size: em(28px);
+  font-size: rem(28px);
 }
 
 h3 {
-  font-size: em(22px);
+  font-size: rem(22px);
 }
 
 h4 {
-  font-size: em(20px);
+  font-size: rem(20px);
 }
 
 h5 {
-  font-size: em(16px);
+  font-size: rem(16px);
 }
 
 h6 {
-  font-size: em(14px);
+  font-size: rem(14px);
 }
 
 
@@ -895,7 +1027,7 @@ b, strong {
 }
 
 small {
-  font-size: 0.9em;
+  font-size: 0.9rem;
 }
 
 sup, sub {
