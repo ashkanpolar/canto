@@ -92,7 +92,7 @@ $container-max-widths: (
 // Set the number of columns and specify the width of the gutters.
 
 $grid-columns: 12 !default;
-$grid-gutter-width: rem(40px);
+$grid-gutter-width: 40px;
 
 /*============================================================================
   #General Variables
@@ -133,6 +133,7 @@ $colorNavText: {{ settings.color_navigation_text }};
 // Site Footer
 $colorFooterBg: {{ settings.color_footer_bg }};
 $colorFooterText: {{ settings.color_footer_text }};
+$footerHeight: 320px; //include margin
 
 // Helper colors
 $disabledGrey: #f6f6f6;
@@ -157,8 +158,8 @@ $gridGutter: 40px; // can be a %, but nested grids will have smaller margins bec
 $radius: 0px;
 
 // Z-index
-$zindexNavDropdowns: 5;
-$zindexDrawer: 10;
+$zindexNavDropdowns: 500;
+$zindexDrawer: 1000;
 
 /*================ Typography ================*/
 
@@ -185,14 +186,6 @@ $socialIconFontStack: 'icons';
 /*============================================================================
   #Sass Mixins
 ==============================================================================*/
-.clearfix {
-  &:after {
-    content: '';
-    display: table;
-    clear: both; }
-  *zoom: 1;
-}
-
 @mixin clearfix() {
   &:after {
     content: '';
@@ -237,6 +230,38 @@ $socialIconFontStack: 'icons';
   box-sizing: #{$box-sizing};
 }
 
+// Vertically fix position to top of bottom
+@mixin vfixelement($vposition, $value: 0) {
+  position: fixed;
+  left: 0;
+  right: 0;
+  #{$vposition}: $value;
+}
+@mixin makeInvisible {
+  clip: rect(0, 0, 0, 0);
+  overflow: hidden;
+  position: absolute;
+  height: 1px;
+  width: 1px;
+  opacity: 0;
+}
+@mixin iconBtn($iconSrc) {
+  .icon {
+    height: 40px;
+    width: 40px;
+    display: block;
+    background:{
+      image: url($iconSrc);
+      repeat: no-repeat;
+      position: 50% 50%;
+      color: transparent;
+    }
+  }
+  .fallback-text {
+    @include makeInvisible;
+  }
+}
+
 @function em($target, $context: $baseFontSize) {
   @if $target == 0 {
     @return 0;
@@ -256,6 +281,488 @@ $socialIconFontStack: 'icons';
   }
   @else {
     @return #fff;
+  }
+}
+
+// Flexbox Mixins
+// http://philipwalton.github.io/solved-by-flexbox/
+// https://github.com/philipwalton/solved-by-flexbox
+//
+// Copyright (c) 2013 Brian Franco
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to
+// permit persons to whom the Software is furnished to do so, subject to
+// the following conditions:
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+// IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+// CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+// TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+// SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+//
+// This is a set of mixins for those who want to mess around with flexbox
+// using the native support of current browsers. For full support table
+// check: http://caniuse.com/flexbox
+//
+// Basically this will use:
+//
+// * Fallback, old syntax (IE10, mobile webkit browsers - no wrapping)
+// * Final standards syntax (FF, Safari, Chrome, IE11, Opera)
+//
+// This was inspired by:
+//
+// * http://dev.opera.com/articles/view/advanced-cross-browser-flexbox/
+//
+// With help from:
+//
+// * http://w3.org/tr/css3-flexbox/
+// * http://the-echoplex.net/flexyboxes/
+// * http://msdn.microsoft.com/en-us/library/ie/hh772069(v=vs.85).aspx
+// * http://css-tricks.com/using-flexbox/
+// * http://dev.opera.com/articles/view/advanced-cross-browser-flexbox/
+// * https://developer.mozilla.org/en-us/docs/web/guide/css/flexible_boxes
+
+//----------------------------------------------------------------------
+
+// Flexbox Containers
+//
+// The 'flex' value causes an element to generate a block-level flex
+// container box.
+//
+// The 'inline-flex' value causes an element to generate a inline-level
+// flex container box.
+//
+// display: flex | inline-flex
+//
+// http://w3.org/tr/css3-flexbox/#flex-containers
+//
+// (Placeholder selectors for each type, for those who rather @extend)
+
+@mixin flexbox {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+%flexbox { @include flexbox; }
+
+//----------------------------------
+
+@mixin inline-flex {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -moz-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+}
+
+%inline-flex { @include inline-flex; }
+
+//----------------------------------------------------------------------
+
+// Flexbox Direction
+//
+// The 'flex-direction' property specifies how flex items are placed in
+// the flex container, by setting the direction of the flex container's
+// main axis. This determines the direction that flex items are laid out in.
+//
+// Values: row | row-reverse | column | column-reverse
+// Default: row
+//
+// http://w3.org/tr/css3-flexbox/#flex-direction-property
+
+@mixin flex-direction($value: row) {
+  @if $value == row-reverse {
+    -webkit-box-direction: reverse;
+    -webkit-box-orient: horizontal;
+  } @else if $value == column {
+    -webkit-box-direction: normal;
+    -webkit-box-orient: vertical;
+  } @else if $value == column-reverse {
+    -webkit-box-direction: reverse;
+    -webkit-box-orient: vertical;
+  } @else {
+    -webkit-box-direction: normal;
+    -webkit-box-orient: horizontal;
+  }
+  -webkit-flex-direction: $value;
+  -moz-flex-direction: $value;
+  -ms-flex-direction: $value;
+  flex-direction: $value;
+}
+// Shorter version:
+@mixin flex-dir($args...) { @include flex-direction($args...); }
+
+//----------------------------------------------------------------------
+
+// Flexbox Wrap
+//
+// The 'flex-wrap' property controls whether the flex container is single-line
+// or multi-line, and the direction of the cross-axis, which determines
+// the direction new lines are stacked in.
+//
+// Values: nowrap | wrap | wrap-reverse
+// Default: nowrap
+//
+// http://w3.org/tr/css3-flexbox/#flex-wrap-property
+
+@mixin flex-wrap($value: nowrap) {
+  // No Webkit Box fallback.
+  -webkit-flex-wrap: $value;
+  -moz-flex-wrap: $value;
+  @if $value == nowrap {
+    -ms-flex-wrap: none;
+  } @else {
+    -ms-flex-wrap: $value;
+  }
+  flex-wrap: $value;
+}
+
+//----------------------------------------------------------------------
+
+// Flexbox Flow (shorthand)
+//
+// The 'flex-flow' property is a shorthand for setting the 'flex-direction'
+// and 'flex-wrap' properties, which together define the flex container's
+// main and cross axes.
+//
+// Values: <flex-direction> | <flex-wrap>
+// Default: row nowrap
+//
+// http://w3.org/tr/css3-flexbox/#flex-flow-property
+
+@mixin flex-flow($values: (row nowrap)) {
+  // No Webkit Box fallback.
+  -webkit-flex-flow: $values;
+  -moz-flex-flow: $values;
+  -ms-flex-flow: $values;
+  flex-flow: $values;
+}
+
+//----------------------------------------------------------------------
+
+// Flexbox Order
+//
+// The 'order' property controls the order in which flex items appear within
+// their flex container, by assigning them to ordinal groups.
+//
+// Default: 0
+//
+// http://w3.org/tr/css3-flexbox/#order-property
+
+@mixin order($int: 0) {
+  -webkit-box-ordinal-group: $int + 1;
+  -webkit-order: $int;
+  -moz-order: $int;
+  -ms-flex-order: $int;
+  order: $int;
+}
+
+//----------------------------------------------------------------------
+
+// Flexbox Grow
+//
+// The 'flex-grow' property sets the flex grow factor. Negative numbers
+// are invalid.
+//
+// Default: 0
+//
+// http://w3.org/tr/css3-flexbox/#flex-grow-property
+
+@mixin flex-grow($int: 0) {
+  -webkit-box-flex: $int;
+  -webkit-flex-grow: $int;
+  -moz-flex-grow: $int;
+  -ms-flex-positive: $int;
+  flex-grow: $int;
+}
+
+//----------------------------------------------------------------------
+
+// Flexbox Shrink
+//
+// The 'flex-shrink' property sets the flex shrink factor. Negative numbers
+// are invalid.
+//
+// Default: 1
+//
+// http://w3.org/tr/css3-flexbox/#flex-shrink-property
+
+@mixin flex-shrink($int: 1) {
+  -webkit-flex-shrink: $int;
+  -moz-flex-shrink: $int;
+  -ms-flex-negative: $int;
+  flex-shrink: $int;
+}
+
+//----------------------------------------------------------------------
+
+// Flexbox Basis
+//
+// The 'flex-basis' property sets the flex basis. Negative lengths are invalid.
+//
+// Values: Like "width"
+// Default: auto
+//
+// http://www.w3.org/TR/css3-flexbox/#flex-basis-property
+
+@mixin flex-basis($value: auto) {
+  -webkit-flex-basis: $value;
+  -moz-flex-basis: $value;
+  -ms-flex-preferred-size: $value;
+  flex-basis: $value;
+}
+
+//----------------------------------------------------------------------
+
+// Flexbox "Flex" (shorthand)
+//
+// The 'flex' property specifies the components of a flexible length: the
+// flex grow factor and flex shrink factor, and the flex basis. When an
+// element is a flex item, 'flex' is consulted instead of the main size
+// property to determine the main size of the element. If an element is
+// not a flex item, 'flex' has no effect.
+//
+// Values: none | <flex-grow> <flex-shrink> || <flex-basis>
+// Default: See individual properties (1 1 0).
+//
+// http://w3.org/tr/css3-flexbox/#flex-property
+
+@mixin flex($fg: 1, $fs: null, $fb: null) {
+
+  // Set a variable to be used by box-flex properties
+  $fg-boxflex: $fg;
+
+  // Box-Flex only supports a flex-grow value so let's grab the
+  // first item in the list and just return that.
+  @if type-of($fg) == 'list' {
+    $fg-boxflex: nth($fg, 1);
+  }
+
+  -webkit-box-flex: $fg-boxflex;
+  -webkit-flex: $fg $fs $fb;
+  -moz-box-flex: $fg-boxflex;
+  -moz-flex: $fg $fs $fb;
+  -ms-flex: $fg $fs $fb;
+  flex: $fg $fs $fb;
+}
+
+//----------------------------------------------------------------------
+
+// Flexbox Justify Content
+//
+// The 'justify-content' property aligns flex items along the main axis
+// of the current line of the flex container. This is done after any flexible
+// lengths and any auto margins have been resolved. Typically it helps distribute
+// extra free space leftover when either all the flex items on a line are
+// inflexible, or are flexible but have reached their maximum size. It also
+// exerts some control over the alignment of items when they overflow the line.
+//
+// Note: 'space-*' values not supported in older syntaxes.
+//
+// Values: flex-start | flex-end | center | space-between | space-around
+// Default: flex-start
+//
+// http://w3.org/tr/css3-flexbox/#justify-content-property
+
+@mixin justify-content($value: flex-start) {
+  @if $value == flex-start {
+    -webkit-box-pack: start;
+    -ms-flex-pack: start;
+  } @else if $value == flex-end {
+    -webkit-box-pack: end;
+    -ms-flex-pack: end;
+  } @else if $value == space-between {
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+  } @else if $value == space-around {
+    -ms-flex-pack: distribute;
+  } @else {
+    -webkit-box-pack: $value;
+    -ms-flex-pack: $value;
+  }
+  -webkit-justify-content: $value;
+  -moz-justify-content: $value;
+  justify-content: $value;
+}
+// Shorter version:
+@mixin flex-just($args...) { @include justify-content($args...); }
+
+//----------------------------------------------------------------------
+
+// Flexbox Align Items
+//
+// Flex items can be aligned in the cross axis of the current line of the
+// flex container, similar to 'justify-content' but in the perpendicular
+// direction. 'align-items' sets the default alignment for all of the flex
+// container's items, including anonymous flex items. 'align-self' allows
+// this default alignment to be overridden for individual flex items. (For
+// anonymous flex items, 'align-self' always matches the value of 'align-items'
+// on their associated flex container.)
+//
+// Values: flex-start | flex-end | center | baseline | stretch
+// Default: stretch
+//
+// http://w3.org/tr/css3-flexbox/#align-items-property
+
+@mixin align-items($value: stretch) {
+  @if $value == flex-start {
+    -webkit-box-align: start;
+    -ms-flex-align: start;
+  } @else if $value == flex-end {
+    -webkit-box-align: end;
+    -ms-flex-align: end;
+  } @else {
+    -webkit-box-align: $value;
+    -ms-flex-align: $value;
+  }
+  -webkit-align-items: $value;
+  -moz-align-items: $value;
+  align-items: $value;
+}
+
+//----------------------------------
+
+// Flexbox Align Self
+//
+// Values: auto | flex-start | flex-end | center | baseline | stretch
+// Default: auto
+
+@mixin align-self($value: auto) {
+  // No Webkit Box Fallback.
+  -webkit-align-self: $value;
+  -moz-align-self: $value;
+  @if $value == flex-start {
+    -ms-flex-item-align: start;
+  } @else if $value == flex-end {
+    -ms-flex-item-align: end;
+  } @else {
+    -ms-flex-item-align: $value;
+  }
+  align-self: $value;
+}
+
+//----------------------------------------------------------------------
+
+// Flexbox Align Content
+//
+// The 'align-content' property aligns a flex container's lines within the
+// flex container when there is extra space in the cross-axis, similar to
+// how 'justify-content' aligns individual items within the main-axis. Note,
+// this property has no effect when the flexbox has only a single line.
+//
+// Values: flex-start | flex-end | center | space-between | space-around | stretch
+// Default: stretch
+//
+// http://w3.org/tr/css3-flexbox/#align-content-property
+
+@mixin align-content($value: stretch) {
+  // No Webkit Box Fallback.
+  -webkit-align-content: $value;
+  -moz-align-content: $value;
+  @if $value == flex-start {
+    -ms-flex-line-pack: start;
+  } @else if $value == flex-end {
+    -ms-flex-line-pack: end;
+  } @else {
+    -ms-flex-line-pack: $value;
+  }
+  align-content: $value;
+}
+
+// Breakpoint viewport sizes and media queries.
+//
+// Breakpoints are defined as a map of (name: minimum width), order from small to large:
+//
+//    (xs: 0, sm: 544px, md: 768px)
+//
+// The map defined in the `$grid-breakpoints` global variable is used as the `$breakpoints` argument by default.
+//
+// Name of the next breakpoint, or null for the last breakpoint.
+//
+//    >> breakpoint-next(sm)
+//    md
+//    >> breakpoint-next(sm, (xs: 0, sm: 544px, md: 768px))
+//    md
+//    >> breakpoint-next(sm, $breakpoint-names: (xs sm md))
+//    md
+@function breakpoint-next($name, $breakpoints: $grid-breakpoints, $breakpoint-names: map-keys($breakpoints)) {
+  $n: index($breakpoint-names, $name);
+  @return if($n < length($breakpoint-names), nth($breakpoint-names, $n + 1), null);
+}
+
+// Minimum breakpoint width. Null for the smallest (first) breakpoint.
+//
+//    >> breakpoint-min(sm, (xs: 0, sm: 544px, md: 768px))
+//    544px
+@function breakpoint-min($name, $breakpoints: $grid-breakpoints) {
+  $min: map-get($breakpoints, $name);
+  @return if($min != 0, $min, null);
+}
+
+// Maximum breakpoint width. Null for the largest (last) breakpoint.
+// The maximum value is calculated as the minimum of the next one less 1px.
+//
+//    >> breakpoint-max(sm, (xs: 0, sm: 544px, md: 768px))
+//    767px
+@function breakpoint-max($name, $breakpoints: $grid-breakpoints) {
+  $next: breakpoint-next($name, $breakpoints);
+  @return if($next, breakpoint-min($next, $breakpoints) - 1px, null);
+}
+
+// Media of at least the minimum breakpoint width. No query for the smallest breakpoint.
+// Makes the @content apply to the given breakpoint and wider.
+@mixin media-breakpoint-up($name, $breakpoints: $grid-breakpoints) {
+  $min: breakpoint-min($name, $breakpoints);
+  @if $min {
+    @media (min-width: $min) {
+      @content;
+    }
+  } @else {
+    @content;
+  }
+}
+
+// Media of at most the maximum breakpoint width. No query for the largest breakpoint.
+// Makes the @content apply to the given breakpoint and narrower.
+@mixin media-breakpoint-down($name, $breakpoints: $grid-breakpoints) {
+  $max: breakpoint-max($name, $breakpoints);
+  @if $max {
+    @media (max-width: $max) {
+      @content;
+    }
+  } @else {
+    @content;
+  }
+}
+
+// Media between the breakpoint's minimum and maximum widths.
+// No minimum for the smallest breakpoint, and no maximum for the largest one.
+// Makes the @content apply only to the given breakpoint, not viewports any wider or narrower.
+@mixin media-breakpoint-only($name, $breakpoints: $grid-breakpoints) {
+  @include media-breakpoint-up($name, $breakpoints) {
+    @include media-breakpoint-down($name, $breakpoints) {
+      @content;
+    }
+  }
+}
+
+// Media that spans multiple breakpoint widths.
+// Makes the @content apply between the min and max breakpoints
+@mixin media-breakpoint-between($lower, $upper, $breakpoints: $grid-breakpoints) {
+  @include media-breakpoint-up($lower, $breakpoints) {
+    @include media-breakpoint-down($upper, $breakpoints) {
+      @content;
+    }
   }
 }
 
@@ -809,11 +1316,9 @@ $enable-flex: true !default;
 //
 // Generate semantic grid columns with these mixins.
 
-@mixin make-container($gutter: $grid-gutter-width) {
+@mixin make-container() {
   margin-left: auto;
   margin-right: auto;
-  padding-left:  ($gutter / 2);
-  padding-right: ($gutter / 2);
   @if not $enable-flex {
     @include clearfix();
   }
@@ -831,8 +1336,8 @@ $enable-flex: true !default;
 
 @mixin make-row($gutter: $grid-gutter-width) {
   @if $enable-flex {
-    display: flex;
-    flex-wrap: wrap;
+    @include flexbox;
+    @include flex-flow(row wrap);
   } @else {
     @include clearfix();
   }
@@ -852,7 +1357,7 @@ $enable-flex: true !default;
 
 @mixin make-col-span($size, $columns: $grid-columns) {
   @if $enable-flex {
-    flex: 0 0 percentage($size / $columns);
+    @include flex(0, 0, percentage($size / $columns));
   } @else {
     width: percentage($size / $columns);
   }
@@ -884,9 +1389,9 @@ $enable-flex: true !default;
 /*============================================================================
   #Basic Styles
 ==============================================================================*/
-html {
+/*html {
   background-color: $colorFooterBg;
-}
+}*/
 
 body {
   background-color: $colorBody;
@@ -894,23 +1399,6 @@ body {
 
 [tabindex='-1']:focus {
   outline: none;
-}
-
-.wrapper {
-  @include clearfix();
-  max-width: $siteWidth;
-  margin: 0 auto;
-  padding: 0 ($gutter / 2);
-
-  @include at-query ($min, $small) {
-    padding: 0 $gutter;
-  }
-}
-
-.main-content {
-  display: block;
-  margin-top: $gutter;
-  padding-bottom: $gutter * 2;
 }
 
 /*============================================================================
@@ -945,6 +1433,10 @@ body {
     vertical-align: middle;
     float: none;
   }
+}
+
+.clearfix {
+  @include clearfix;
 }
 
 /*============================================================================
@@ -1736,7 +2228,7 @@ label.error {
   A generic way to visually hide content while
   remaining accessible to screen readers (h5bp.com)
 ==============================================================================*/
-.supports-fontface .icon-fallback-text .fallback-text {
+.supports-fontface .fallback-text {
   clip: rect(0, 0, 0, 0);
   overflow: hidden;
   position: absolute;
@@ -1808,8 +2300,8 @@ label.error {
   }
 
   .icon {
-    font-size: 30px;
-    line-height: 30px;
+    font-size: rem(30px);
+    line-height: 1rem;
   }
 
   .fallback-text {
@@ -1948,28 +2440,20 @@ label.error {
   #Site Header
 ==============================================================================*/
 .site-header {
-  padding: ($gutter / 2) 0;
-
-  .grid--table {
-    display: table;
-    table-layout: fixed;
-    width: 100%;
-
-    > .grid__item {
-      float: none;
-      display: table-cell;
-      vertical-align: middle;
-    }
+  @include vfixelement(top);
+  z-index: 100; //Above everything
+  @include flexbox;
+  @include flex-flow();
+  @include media-breakpoint-up(sm) {
+    padding: ($gutter / 2) 0;
   }
 }
 
-.site-header__logo {
-  text-align: center;
-  margin: 0 auto;
-  max-width: 100%;
+.site-branding {
+  @include flex(0 0 {{ settings.logo_max_width }}px);
 
-  @include at-query ($min, $large) {
-    text-align: left;
+  @include media-breakpoint-up(md) {
+
   }
 
   a,
@@ -1985,30 +2469,61 @@ label.error {
   img {
     margin: 0 auto;
   }
+  h1 {
+    margin: 0;
+    line-height: 1;
+  }
 }
 
-.site-header__logo-link {
-  max-width: {{ settings.logo_max_width }}px;
-  margin: 0 auto;
+/*================ Header mobile Buttons ================*/
+.menu-toggle {
+  @include media-breakpoint-up(md) {
+    display: none;
+  }
+
+  .button {
+    @include iconBtn('{{ "icon-menu.svg" | asset_url }}');
+  }
 }
 
-.site-header__cart-toggle {
+.cart-toggle {
   display: block;
+  margin-left: auto; // Align cart button right
+  @include media-breakpoint-up(md) {
+    display: none;
+  }
+
+  .button {
+    @include iconBtn('{{ "icon-menu.svg" | asset_url }}')
+  }
 }
 
-.site-header__search {
-  display: inline-block;
+/*================ Header Search ================*/
+.header-search {
   max-width: 400px;
-  margin-top: $gutter / 2;
+  margin-left: auto;
   width: 100%;
+  display: none;
+
+  @include media-breakpoint-up(md) {
+    display: block;
+  }
 }
 
 .search-bar {
-  max-width: 100%;
+  /*max-width: 100%;
 
   @include at-query ($max, $medium) {
     margin-left: auto;
     margin-right: auto;
+  }*/
+}
+
+/*================ Cart Link ================*/
+.cart-link {
+  display: none;
+  @include media-breakpoint-up(md) {
+    display: block;
   }
 }
 
@@ -2017,12 +2532,16 @@ label.error {
 ==============================================================================*/
 .nav-bar {
   background-color: $colorNav;
+  display: none;
+
+  @include media-breakpoint-up(md) {
+    display: block;
+  }
 }
 
 .site-nav {
-  font-size: em(16px);
+  font-size: 1rem;
   cursor: default;
-  margin: 0 0 0 (-$gutter / 2);
 
   li {
     margin: 0;
@@ -2032,15 +2551,6 @@ label.error {
   > li {
     position: relative;
     display: inline-block;
-  }
-}
-
-/*================ Home to hamburger and cart that toggle drawers ================*/
-.site-nav--mobile {
-  @extend .site-nav;
-
-  .text-right & {
-    margin: 0 (-$gutter / 2) 0 0;
   }
 }
 
@@ -2109,7 +2619,6 @@ label.error {
     text-align: center;
   }
 }
-
 /*============================================================================
   #Mobile Nav
   - List of items inside the mobile drawer
@@ -2363,6 +2872,29 @@ label.error {
 }
 
 /*============================================================================
+  #Main Content
+==============================================================================*/
+
+.main-content {
+  @include make-container();
+  //@include make-container-max-widths();
+  background-color: $colorBody;
+  margin-top: 40px;
+
+  .template-index & {
+    margin-top: 0;
+  }
+
+  @include media-breakpoint-up(md) {
+    margin-bottom: $footerHeight;
+    margin-top: 60px;
+  }
+  // Put in front of footer and behind header
+  position: relative;
+  z-index: 5;
+}
+
+/*============================================================================
   #Site Footer
 ==============================================================================*/
 .site-footer {
@@ -2372,6 +2904,11 @@ label.error {
 
   @include at-query ($min, $large) {
     padding: ($gutter * 2) 0;
+  }
+
+  @include media-breakpoint-up(md) {
+    @include vfixelement(bottom);
+    z-index: 1; //Behind main content
   }
 }
 
@@ -2397,7 +2934,7 @@ label.error {
 
 /*============================================================================
   #Breadcrumbs
-==============================================================================*/
+==============================================================================
 .breadcrumb {
   margin-bottom: $gutter;
 
@@ -2412,7 +2949,7 @@ label.error {
     }
   }
 }
-
+*/
 
 /*============================================================================
   #Product Page

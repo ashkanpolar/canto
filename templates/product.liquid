@@ -1,11 +1,11 @@
-<!-- /templates/product.liquid -->
+{% comment %}
+/templates/product.liquid
+{% endcomment %}
 
 <div itemscope itemtype="http://schema.org/Product">
 
   <meta itemprop="url" content="{{ store.url }}{{ product.url }}">
   <meta itemprop="image" content="{{ product.main_image.src | img_url: 'large' }}">
-
-  {% include 'breadcrumb' %}
 
   <div class="grid product-single gallery mode-zoom" >
     <div class="grid__item large--one-half text-center">

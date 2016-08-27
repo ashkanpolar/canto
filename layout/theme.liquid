@@ -127,7 +127,7 @@
     </ul>
     <!-- //mobile-nav -->
   </div>
-  
+
   <div id="CartDrawer" class="drawer drawer--right">
     <div class="drawer__header">
       <div class="drawer__title h3">{{ 'cart.general.title' | t }}</div>
@@ -139,7 +139,7 @@
       </div>
     </div>
     <div id="CartContainer">
-    
+
     <!--- cart items begin -->
     {% if cart.item_count > 0 %}
     <form action="{{ urls.cart_update }}" method="post" novalidate="" class="cart">
@@ -153,7 +153,7 @@
               </div>
               <div class="grid__item three-quarters">
                 <p>
-                  <a href="{{ item.product.url }}" class="ajaxcart__product-name">{{ item.product.name }}</a>                
+                  <a href="{{ item.product.url }}" class="ajaxcart__product-name">{{ item.product.name }}</a>
                     {% if item.variant %}
                     <span class="ajaxcart__product-meta">{{ item.variant.title }}</span>
                     {% endif %}
@@ -164,8 +164,8 @@
             <div class="grid--full">
                   <div class="grid__item one-third">
                    <a href="{{ urls.cart_edit }}?id={{ item.id }}&quantity=0" class="cart__remove" data-id="{{ item.id }}"><small>{{ 'cart.general.remove' | t }}</small></a>
-                  </div>                
-                
+                  </div>
+
                   <div class="grid__item one-third">
                     <div class="ajaxcart__qty">
                        <input type="number" name="items[{{ item.id }}][quantity]" id="updates_{{ item.id }}" value="{{ item.quantity }}" min="0" data-id="{{ item.id }}">
@@ -189,122 +189,104 @@
           </div>
         </div>
         <p class="text-center">{{ 'cart.general.shipping_at_checkout' | t }}</p>
-        
+
         <button type="submit" class="btn btn--full btn--secondary update-cart" name="update" style="margin-bottom:10px;">
           {{ 'cart.general.update' | t }}
         </button>
-        
+
         <button type="submit" class="btn btn--full cart__checkout" name="checkout">
           {{ 'cart.general.checkout' | t }}
         </button>
       </div>
     </form>
-    
+
     {% else %}
-    
+
     {{ 'cart.general.empty' | t }}
-        
+
     {% endif %}
-    
+
     <!-- cart ends -->
 
     </div>
   </div>
-  
+
 <!-- END MOBILE NAV  -->
 
-<div id="PageContainer" class="is-moved-by-drawer">
-
 <header class="site-header" role="banner">
-<div class="wrapper">
-
-  <div class="grid--full">
-    <div class="grid__item large--one-half">
-
-      {% if template == 'index' %}
-        <h1 class="site-header__logo large--left" itemscope itemtype="http://schema.org/Organization">
-      {% else %}
-        <div class="h1 site-header__logo large--left" itemscope itemtype="http://schema.org/Organization">
-      {% endif %}
-        {% if settings.logo_use_image %}
-          <a href="/" itemprop="url">
-            <img src="{{ 'logo.png' | asset_url }}" alt="{{ store.name }}" itemprop="logo">
-          </a>
-        {% else %}
-          <a href="/" itemprop="url">{{ store.name }}</a>
-        {% endif %}
-      {% if template == 'index' %}
-        </h1>
-      {% else %}
-        </div>
-      {% endif %}
-    </div>
-    <div class="grid__item large--one-half large--text-right medium-down--hide">
-
-      <a href="{{ urls.cart }}" class="js-drawer-open-right" aria-controls="CartDrawer" aria-expanded="false">
-        <span class="icon-fallback-text">
-          <span class="icon icon-cart" aria-hidden="true"></span>
-        </span>
-        {{ 'layout.cart.title' | t }}
-        (<span id="CartCount">{{ cart.item_count }}</span>
-        {{ 'layout.cart.items_count' | t: count: cart.item_count }}
-        <span id="CartCost">{{ cart.total_price | money }}</span>)
-      </a>
-
-      <div>
-        {% if customer %}
-          <a href="{{ urls.account_logout }}">{{ 'layout.customer.log_out' | t}}</a>
-        {% else %}
-          <a href="{{ urls.account_login }}">{{ 'layout.customer.log_in' | t}}</a>
-          | <a href="{{ urls.account_register }}">{{ 'layout.customer.create_account' | t}}</a>
-        {% endif %}
-      </div>
-
-      <div class="site-header__search">
-        {% include 'search-bar' %}
-      </div>
-    </div>
+  <div class="menu-toggle">
+    <button type="button" class="button js-drawer-open-left" aria-controls="NavDrawer" aria-expanded="false">
+      <span class="icon" aria-hidden="true"></span>
+      <span class="fallback-text">{{ 'layout.navigation.menu' | t }}</span>
+    </button>
   </div>
-</div>
+  <div class="site-branding">
+    {% if template == 'index' %}
+      <h1 itemscope itemtype="http://schema.org/Organization">
+    {% else %}
+      <div itemscope itemtype="http://schema.org/Organization">
+    {% endif %}
+      {% if settings.logo_use_image %}
+        <a href="/" itemprop="url">
+          <img src="{{ 'logo.png' | asset_url }}" alt="{{ store.name }}" itemprop="logo">
+        </a>
+      {% else %}
+        <a href="/" itemprop="url">{{ store.name }}</a>
+      {% endif %}
+    {% if template == 'index' %}
+      </h1>
+    {% else %}
+      </div>
+    {% endif %}
+  </div>
+  <nav class="nav-bar" role="navigation">
+    <!-- begin site-nav -->
+    {% include 'site-nav' %}
+    <!-- /site-nav -->
+  </nav>
+  <div class="header-search">
+    {% include 'search-bar' %}
+  </div>
+  <div class="cart-toggle">
+    <button type="button" class="button js-drawer-open-right" aria-controls="CartDrawer" aria-expanded="false">
+      <span class="icon" aria-hidden="true"></span>
+      <span class="fallback-text">{{ 'layout.cart.title' | t }}</span>
+    </button>
+  </div>
+  <div class="cart-link">
+    <a href="{{ urls.cart }}" class="js-drawer-open-right" aria-controls="CartDrawer" aria-expanded="false">
+      <span class="link-icon">
+        <span class="icon" aria-hidden="true"></span>
+      </span>
+      {{ 'layout.cart.title' | t }}
+      {% comment %}
+      <!-- Remove cart details -->
+      (<span id="CartCount">{{ cart.item_count }}</span>
+      {{ 'layout.cart.items_count' | t: count: cart.item_count }}
+      <span id="CartCost">{{ cart.total_price | money }}</span>)
+      {% endcomment %}
+    </a>
+    {% comment %}
+    <!-- Hide customer login/logout -->
+    <div>
+      {% if customer %}
+        <a href="{{ urls.account_logout }}">{{ 'layout.customer.log_out' | t}}</a>
+      {% else %}
+        <a href="{{ urls.account_login }}">{{ 'layout.customer.log_in' | t}}</a>
+        | <a href="{{ urls.account_register }}">{{ 'layout.customer.create_account' | t}}</a>
+      {% endif %}
+    </div>
+    {% endcomment %}
+  </div>
 </header>
 
-<nav class="nav-bar" role="navigation">
-  <div class="wrapper">
-    <div class="medium-down--hide">
-      <!-- begin site-nav -->
-      {% include 'site-nav' %}
-      <!-- //site-nav -->
-    </div>
-    <div class="large--hide medium-down--show">
-      <div class="grid">
-        <div class="grid__item one-half">
-          <div class="site-nav--mobile">
-            <button type="button" class="icon-fallback-text site-nav__link js-drawer-open-left" aria-controls="NavDrawer" aria-expanded="false">
-              <span class="icon icon-hamburger" aria-hidden="true"></span>
-              <span class="fallback-text">{{ 'layout.navigation.menu' | t }}</span>
-            </button>
-          </div>
-        </div>
-        <div class="grid__item one-half text-right">
-          <div class="site-nav--mobile">
-            <button type="button" class="icon-fallback-text site-nav__link js-drawer-open-right" aria-controls="CartDrawer" aria-expanded="false">
-                <span class="icon icon-cart" aria-hidden="true"></span>
-                <span class="fallback-text">{{ 'layout.cart.title' | t }}</span>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</nav>
 
-  <main class="wrapper main-content" role="main">
 
-  <hr/>
+<main class="wrapper main-content" role="main">
 
     {{ content_for_layout }}
 
-  </main>
+ </main>
 
   {% include 'footer' %}
 
