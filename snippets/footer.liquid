@@ -1,11 +1,15 @@
 {% comment %}
 /snippets/footer.liquid
 {% endcomment %}
-<footer class="site-footer small--text-center" role="contentinfo">
+<footer class="site-footer" role="contentinfo">
+    {% if settings.footer_newsletter_enable %}
+    <div class="newsletter">
+        <h3>{{ 'layout.footer.newsletter_title' | t }}</h3>
+        {% include 'newsletter-form' %}
+    </div>
+    {% endif %}
 
-  <div class="wrapper">
-
-    <div class="grid-uniform">
+    <div class="footer-navigation">
 
       {% comment %}
         Calculate the number of footer columns shown
@@ -32,8 +36,7 @@
       {% endcase %}
 
       {% if settings.footer_quicklinks_enable %}
-        <div class="grid__item {{ footer_column_width }}">
-          <h3>{{ 'layout.footer.linklist_title' | t }}</h3>
+        <div class="collection-links">
           <ul>
             {% for link in navigation[settings.footer_quicklinks_linklist].links %}
               <li><a href="{{ link.url }}">{{ link.name }}</a></li>
@@ -42,91 +45,94 @@
         </div>
       {% endif %}
 
-      {% if settings.footer_social_enable %}
-        <div class="grid__item {{ footer_column_width }}">
-          <h3>{{ 'layout.footer.social_title' | t }}</h3>
-            {% comment %}
-              Loop through the social network links
-            {% endcomment %}
-            <ul class="inline-list social-icons">
-              {% if settings.social_twitter_link != blank %}
-                <li>
-                  <a class="icon-fallback-text" href="{{ settings.social_twitter_link }}" title="{{ store.name }} on Twitter">
-                    <span class="icon icon-twitter" aria-hidden="true"></span>
-                    <span class="fallback-text">Twitter</span>
-                  </a>
-                </li>
-              {% endif %}
-              {% if settings.social_facebook_link != blank %}
-                <li>
-                  <a class="icon-fallback-text" href="{{ settings.social_facebook_link }}" title="{{ store.name }} on Facebook">
-                    <span class="icon icon-facebook" aria-hidden="true"></span>
-                    <span class="fallback-text">Facebook</span>
-                  </a>
-                </li>
-              {% endif %}
-              {% if settings.social_instagram_link != blank %}
-                <li>
-                  <a class="icon-fallback-text" href="{{ settings.social_instagram_link }}" title="{{ store.name }} on Instagram">
-                    <span class="icon icon-instagram" aria-hidden="true"></span>
-                    <span class="fallback-text">Instagram</span>
-                  </a>
-                </li>
-              {% endif %}
-              {% if settings.social_pinterest_link != blank %}
-                <li>
-                  <a class="icon-fallback-text" href="{{ settings.social_pinterest_link }}" title="{{ store.name }} on Pinterest">
-                    <span class="icon icon-pinterest" aria-hidden="true"></span>
-                    <span class="fallback-text">Pinterest</span>
-                  </a>
-                </li>
-              {% endif %}
-              {% if settings.social_tumblr_link != blank %}
-                <li>
-                  <a class="icon-fallback-text" href="{{ settings.social_tumblr_link }}" title="{{ shop.name }} on Tumblr">
-                    <span class="icon icon-tumblr" aria-hidden="true"></span>
-                    <span class="fallback-text">Tumblr</span>
-                  </a>
-                </li>
-              {% endif %}               
-              {% if settings.social_google_link != blank %}
-                <li>
-                  <a class="icon-fallback-text" href="{{ settings.social_google_link }}" title="{{ shop.name }} on Google+">
-                    <span class="icon icon-google" aria-hidden="true"></span>
-                    <span class="fallback-text">Google+</span>
-                  </a>
-                </li>
-              {% endif %}   
-              {% if settings.social_vimeo_link != blank %}
-                <li>
-                  <a class="icon-fallback-text" href="{{ settings.social_vimeo_link }}" title="{{ shop.name }} on Vimeo">
-                    <span class="icon icon-vimeo" aria-hidden="true"></span>
-                    <span class="fallback-text">Vimeo</span>
-                  </a>
-                </li>
-              {% endif %} 
-              {% if settings.social_youtube_link != blank %}
-                <li>
-                  <a class="icon-fallback-text" href="{{ settings.social_youtube_link }}" title="{{ shop.name }} on YouTube">
-                    <span class="icon icon-youtube" aria-hidden="true"></span>
-                    <span class="fallback-text">YouTube</span>
-                  </a>
-                </li>
-              {% endif %}  
-            </ul>
-        </div>
+      {% if settings.footer_quicklinks_enable %}
+      <div class="secondary-links">
+        <ul>
+          {% for link in navigation[settings.footer_quicklinks_linklist].links %}
+          <li><a href="{{ link.url }}">{{ link.name }}</a></li>
+          {% endfor %}
+        </ul>
+      </div>
       {% endif %}
 
-      {% if settings.footer_newsletter_enable %}
-        <div class="grid__item {{ footer_column_width }}">
-          <h3>{{ 'layout.footer.newsletter_title' | t }}</h3>
-          {% include 'newsletter-form' %}
-        </div>
+      {% if settings.footer_social_enable %}
+      <div class="social">
+          {% comment %}
+            Loop through the social network links
+          {% endcomment %}
+          <ul class="inline-list social-icons">
+            {% if settings.social_twitter_link != blank %}
+              <li>
+                <a class="icon-fallback-text" href="{{ settings.social_twitter_link }}" title="{{ store.name }} on Twitter">
+                  <span class="icon icon-twitter" aria-hidden="true"></span>
+                  <span class="fallback-text">Twitter</span>
+                </a>
+              </li>
+            {% endif %}
+            {% if settings.social_facebook_link != blank %}
+              <li>
+                <a class="icon-fallback-text" href="{{ settings.social_facebook_link }}" title="{{ store.name }} on Facebook">
+                  <span class="icon icon-facebook" aria-hidden="true"></span>
+                  <span class="fallback-text">Facebook</span>
+                </a>
+              </li>
+            {% endif %}
+            {% if settings.social_instagram_link != blank %}
+              <li>
+                <a class="icon-fallback-text" href="{{ settings.social_instagram_link }}" title="{{ store.name }} on Instagram">
+                  <span class="icon icon-instagram" aria-hidden="true"></span>
+                  <span class="fallback-text">Instagram</span>
+                </a>
+              </li>
+            {% endif %}
+            {% if settings.social_pinterest_link != blank %}
+              <li>
+                <a class="icon-fallback-text" href="{{ settings.social_pinterest_link }}" title="{{ store.name }} on Pinterest">
+                  <span class="icon icon-pinterest" aria-hidden="true"></span>
+                  <span class="fallback-text">Pinterest</span>
+                </a>
+              </li>
+            {% endif %}
+            {% if settings.social_tumblr_link != blank %}
+              <li>
+                <a class="icon-fallback-text" href="{{ settings.social_tumblr_link }}" title="{{ shop.name }} on Tumblr">
+                  <span class="icon icon-tumblr" aria-hidden="true"></span>
+                  <span class="fallback-text">Tumblr</span>
+                </a>
+              </li>
+            {% endif %}
+            {% if settings.social_google_link != blank %}
+              <li>
+                <a class="icon-fallback-text" href="{{ settings.social_google_link }}" title="{{ shop.name }} on Google+">
+                  <span class="icon icon-google" aria-hidden="true"></span>
+                  <span class="fallback-text">Google+</span>
+                </a>
+              </li>
+            {% endif %}
+            {% if settings.social_vimeo_link != blank %}
+              <li>
+                <a class="icon-fallback-text" href="{{ settings.social_vimeo_link }}" title="{{ shop.name }} on Vimeo">
+                  <span class="icon icon-vimeo" aria-hidden="true"></span>
+                  <span class="fallback-text">Vimeo</span>
+                </a>
+              </li>
+            {% endif %}
+            {% if settings.social_youtube_link != blank %}
+              <li>
+                <a class="icon-fallback-text" href="{{ settings.social_youtube_link }}" title="{{ shop.name }} on YouTube">
+                  <span class="icon icon-youtube" aria-hidden="true"></span>
+                  <span class="fallback-text">YouTube</span>
+                </a>
+              </li>
+            {% endif %}
+          </ul>
+      </div>
       {% endif %}
     </div>
 
-
-
-  </div>
+    <div class="copyright">
+        <p>&copy;{{ store.name }}. All rights reserved</p>
+        <!-- Made in your world image -->
+    </div>
 
 </footer>
