@@ -1,33 +1,32 @@
 <!-- /snippets/site-nav.liquid -->
 
 <ul class="site-nav" id="AccessibleNav">
-
   {% for link in navigation.main-menu.links %}
 
         {% assign child_list_handle = link.url | handleize | default: '__default__' %}
         {% if navigation[child_list_handle].links != blank %}
-          <li class="site-nav--has-dropdown{% if link.active %} site-nav--active{% endif %}" aria-haspopup="true">
-            <a  class="site-nav__link">{{ link.name }}</a>
-            <ul class="site-nav__dropdown">
+          <li class="had-dropdown" aria-haspopup="true">
+            <a>{{ link.name }}</a>
+            <ul class="dropdown">
               {% for childlink in navigation[child_list_handle].links %}
 
                 {% assign sub_child_list_handle = childlink.url | handleize | default: '__default__' %}
                 {% if navigation[sub_child_list_handle].links != blank %}
-                    <li class="site-nav--has-dropdown{% if childlink.active %} site-nav--active{% endif %}" aria-haspopup="true">
+                    <li class="has-dropdown" aria-haspopup="true">
 
-                        <a  class="site-nav__link">{{ childlink.name }}</a>
-                        <ul class="site-nav__dropdown">
+                        <a>{{ childlink.name }}</a>
+                        <ul class="dropdown">
                         {% for subchildlink in navigation[sub_child_list_handle].links %}
-                            <li{% if subchildlink.active %} class="site-nav--active"{% endif %}>
-                              <a href="{{ subchildlink.url }}" class="site-nav__link">{{ subchildlink.name | escape }}</a>
+                            <li>
+                              <a href="{{ subchildlink.url }}">{{ subchildlink.name | escape }}</a>
                             </li>
                         {% endfor %}
                         </ul>
                     </li>
                 {% else %}
 
-                    <li{% if childlink.active %} class="site-nav--active"{% endif %}>
-                      <a href="{{ childlink.url }}" class="site-nav__link">{{ childlink.name | escape }}</a>
+                    <li>
+                      <a href="{{ childlink.url }}">{{ childlink.name | escape }}</a>
                     </li>
 
                 {% endif %}
@@ -36,10 +35,22 @@
             </ul>
           </li>
         {% else %}
-          <li {% if link.active %}class="site-nav--active"{% endif %}>
-            <a href="{{ link.url }}" class="site-nav__link">{{ link.name }}</a>
+          {% if link.name == 'Collection' %}
+              <li class="has-dropdown" aria-haspopup="true">
+                <a href="{{ link.url }}">{{ link.name }}</a>
+                <ul class="dropdown">
+                  {% for link in navigation.collection.links %}
+                  <li>
+                    <a href="{{ link.url }}">{{ link.name }}</a>
+                  </li>
+                  {% endfor %}
+                </ul>
+              </li>
+          {% else %}
+          <li>
+            <a href="{{ link.url }}">{{ link.name }}</a>
           </li>
         {% endif %}
-
+      {% endif %}
   {% endfor %}
 </ul>

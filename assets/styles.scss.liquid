@@ -32,29 +32,14 @@
   #Ajax Cart Styles
 ==============================================================================*/
 
-/*============================================================================
-  #Breakpoint and Grid Variables
-==============================================================================*/
-$viewportIncrement: 1px;
-
-$small: 480px;
-$medium: 768px;
-$large: 769px;
-
-$postSmall: $small + $viewportIncrement;
-$preMedium: $medium - $viewportIncrement;
-$preLarge: $large - $viewportIncrement;
-
-/*================ The following are dependencies of csswizardry grid ================*/
-$breakpoints: (
-        'small' '(max-width: #{$small})',
-        'medium' '(min-width: #{$postSmall})',
-        'medium-down' '(max-width: #{$medium})',
-        'large' '(min-width: #{$large})'
-);
-$breakpoint-has-widths: ('small', 'medium', 'medium-down', 'large');
-$breakpoint-has-push:  ('medium', 'medium-down', 'large');
-$breakpoint-has-pull:  ('medium', 'medium-down', 'large');
+// Convert all Pixel Values to rem
+$baseFontSize: 16px; // Henceforth known as 1em/rem
+@function rem($target) {
+  @if $target == 0 {
+    @return 0;
+  }
+  @return $target / $baseFontSize + 0rem;
+}
 
 // Grid breakpoints
 //
@@ -63,15 +48,15 @@ $breakpoint-has-pull:  ('medium', 'medium-down', 'large');
 
 $grid-breakpoints: (
     // Extra small screen / phone
-        xs: 0,
+        xs: rem(0),
     // Small screen / phone
-        sm: 544px,
+        sm: rem(544px),
     // Medium screen / tablet
-        md: 768px,
+        md: rem(768px),
     // Large screen / desktop
-        lg: 992px,
+        lg: rem(992px),
     // Extra large screen / wide desktop
-        xl: 1200px
+        xl: rem(1200px)
 ) !default;
 
 
@@ -80,10 +65,10 @@ $grid-breakpoints: (
 // Define the maximum width of `.container` for different screen sizes.
 
 $container-max-widths: (
-        sm: 576px,
-        md: 720px,
-        lg: 940px,
-        xl: 1140px
+        sm: 100%,
+        md: 100%,
+        lg: 100%,
+        xl: rem(1200px)
 ) !default;
 
 
@@ -133,7 +118,7 @@ $colorNavText: {{ settings.color_navigation_text }};
 // Site Footer
 $colorFooterBg: {{ settings.color_footer_bg }};
 $colorFooterText: {{ settings.color_footer_text }};
-$footerHeight: 320px; //include margin
+$footerHeight: 800px; //include margin
 
 // Helper colors
 $disabledGrey: #f6f6f6;
@@ -144,18 +129,17 @@ $successGreen: #56ad6a;
 $successGreenBg: #ecfef0;
 
 // Drawers
-$drawerNavWidth: 300px;
-$drawerCartWidth: 300px;
+$drawerNavWidth: rem(300px);
+$drawerCartWidth: rem(300px);
 $colorDrawers: #f6f6f6;
 $colorDrawerBorder: darken($colorDrawers, 5%);
 $colorDrawerText: #333;
 $drawerTransition: 'all 0.4s cubic-bezier(0.46, 0.01, 0.32, 1)';
 
 // Sizing variables
-$siteWidth: 1180px;
-$gutter: 40px;
-$gridGutter: 40px; // can be a %, but nested grids will have smaller margins because of it
-$radius: 0px;
+$gutter: rem(40px);
+$gridGutter: rem(40px); // can be a %, but nested grids will have smaller margins because of it
+$radius: 0;
 
 // Z-index
 $zindexNavDropdowns: 500;
@@ -168,7 +152,6 @@ $headerFontStack: 'Quicksand', 'HelveticaNeue', 'Helvetica Neue', Helvetica, Ari
 $headerFontWeight: 700;
 
 $bodyFontStack: 'Quicksand', 'HelveticaNeue', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-$baseFontSize: 16px; // Henseforth known as 1em/rem
 
 @font-face {
   font-family: 'icons';
@@ -241,14 +224,15 @@ $socialIconFontStack: 'icons';
   clip: rect(0, 0, 0, 0);
   overflow: hidden;
   position: absolute;
-  height: 1px;
-  width: 1px;
+  height: rem(1px);
+  width: rem(1px);
   opacity: 0;
 }
 @mixin iconBtn($iconSrc) {
+  display: block;
   .icon {
-    height: 40px;
-    width: 40px;
+    height: rem(40px);
+    width: rem(40px);
     display: block;
     background:{
       image: url($iconSrc);
@@ -267,12 +251,6 @@ $socialIconFontStack: 'icons';
     @return 0;
   }
   @return $target / $context + 0em;
-}
-@function rem($target) {
-  @if $target == 0 {
-    @return 0;
-  }
-  @return $target / $baseFontSize + 0rem;
 }
 
 @function color-control($color) {
@@ -889,66 +867,10 @@ textarea { // 1
 }
 
 /*============================================================================
-  #Grid Setup
-    - Based on csswizardry grid, but with floated columns, a fixed gutter size, and BEM classes
-    - Breakpoints defined above, under #Breakpoint and Grid Variables
-    - Note the inclusion of .grid-uniform to take care of clearfixes on evenly sized grid items
-==============================================================================*/
-$responsive:         true;
-$mobile-first:       true;
-$use-silent-classes: false;
-$push:               true;
-$pull:               false;
-
-/* Force clearfix on grids */
-.grid,
-.grid-uniform {
-  @include clearfix;
-}
-
-/* Manual grid__item clearfix */
-.grid__item.clear {
-  clear: both;
-}
-
-$class-type: unquote(".");
-
-@if $use-silent-classes == true {
-  $class-type: unquote("%");
-}
-
-@mixin grid-media-query($media-query) {
-  $breakpoint-found: false;
-
-  @each $breakpoint in $breakpoints {
-    $name: nth($breakpoint, 1);
-    $declaration: nth($breakpoint, 2);
-
-    @if $media-query == $name and $declaration {
-      $breakpoint-found: true;
-
-      @media only screen and #{$declaration} {
-        @content;
-      }
-    }
-  }
-
-  @if $breakpoint-found == false {
-    @warn "Breakpoint '#{$media-query}' does not exist";
-  }
-}
-
-/*============================================================================
   #Flex Grid Setup
     - Based on bootstrap 4 flexbox grid
     - Breakpoints defined above, under #Breakpoint and Grid Variables
 ==============================================================================*/
-
-// Flex Grid Settings
-//
-// Necessary grid settings for flexbox grid
-
-$enable-flex: true !default;
 
 /// Grid system
 //
@@ -957,9 +879,6 @@ $enable-flex: true !default;
 @mixin make-container() {
   margin-left: auto;
   margin-right: auto;
-  @if not $enable-flex {
-    @include clearfix();
-  }
 }
 
 
@@ -973,32 +892,21 @@ $enable-flex: true !default;
 }
 
 @mixin make-row($gutter: $grid-gutter-width) {
-  @if $enable-flex {
-    @include flexbox;
-    @include flex-flow(row wrap);
-  } @else {
-    @include clearfix();
-  }
+  @include flexbox;
+  @include flex-flow(row wrap);
   margin-left:  ($gutter / -2);
   margin-right: ($gutter / -2);
 }
 
 @mixin make-col($gutter: $grid-gutter-width) {
   position: relative;
-  @if not $enable-flex {
-    float: left;
-  }
-  min-height: 1px;
+  min-height: rem(1px);
   padding-left:  ($gutter / 2);
   padding-right: ($gutter / 2);
 }
 
 @mixin make-col-span($size, $columns: $grid-columns) {
-  @if $enable-flex {
-    @include flex(0, 0, percentage($size / $columns));
-  } @else {
-    width: percentage($size / $columns);
-  }
+  @include flex(0, 0, percentage($size / $columns));
 }
 
 @mixin make-col-offset($size, $columns: $grid-columns) {
@@ -1027,9 +935,9 @@ $enable-flex: true !default;
 /*============================================================================
   #Basic Styles
 ==============================================================================*/
-/*html {
-  background-color: $colorFooterBg;
-}*/
+html {
+  font-size: $baseFontSize;
+}
 
 body {
   background-color: $colorBody;
@@ -1085,8 +993,8 @@ input,
 textarea,
 button,
 select {
-  font-size: $baseFontSize;
-  line-height: 1.6;
+  font-size: 1rem;
+  line-height: 1.25;
   font-family: $bodyFontStack;
   color: $colorTextBody;
   font-weight: 300;
@@ -1098,7 +1006,7 @@ h1, h2, h3, h4, h5, h6 {
   display: block;
   font-family: $headerFontStack;
   font-weight: $headerFontWeight;
-  margin: 0 0 0.5em;
+  margin: 0 0 0.5rem;
   line-height: 1.4;
 
   a {
@@ -1175,7 +1083,7 @@ sub {
 
 /*================ Blockquotes ================*/
 blockquote {
-  font-size: 1.125em;
+  font-size: 1.125rem;
   line-height: 1.45;
   font-style: italic;
   margin: 0 0 $gutter;
@@ -1192,7 +1100,7 @@ blockquote {
 
   cite {
     display: block;
-    font-size: 0.75em;
+    font-size: 0.75rem;
 
     &:before {
       content: '\2014 \0020';
@@ -1204,9 +1112,9 @@ blockquote {
 code, pre {
   background-color: #faf7f5;
   font-family: Consolas,monospace;
-  font-size: 1em;
+  font-size: 1rem;
   border: 0 none;
-  padding: 0 2px;
+  padding: 0 rem(2px);
   color: #51ab62;
 }
 
@@ -1263,7 +1171,7 @@ hr {
     display: table-cell;
     vertical-align: middle;
     text-align: right;
-    width: 335px;
+    width: rem(335px);
 
     @include media-breakpoint-up (md) {
       margin-bottom: $gutter;
@@ -1290,8 +1198,8 @@ hr {
   display: inline-block;
   border: 1px solid $colorBorder;
   border-radius: $radius;
-  padding: 0 5px;
-  height: 37px; // same as form elements
+  padding: 0 rem(5px);
+  height: rem(40px); // same as form elements
   overflow: hidden;
 
   /*================ Only show on larger screens ================*/
@@ -1305,7 +1213,7 @@ hr {
   background: none;
   border: 0 none;
   float: left;
-  padding: 10px 8px;
+  padding: rem(10px) rem(8px);
   color: $colorBorder;
   line-height: 1;
 
@@ -1348,7 +1256,7 @@ hr {
   }
 
   li {
-    margin-bottom: 0.4em;
+    margin-bottom: 0.4rem;
   }
 }
 
@@ -1383,7 +1291,7 @@ html input[disabled] {
 .btn,
 .rte .btn {
   display: inline-block;
-  padding: 8px 10px;
+  padding: rem(8px) rem(10px);
   width: auto;
   margin: 0;
   line-height: 1.42;
@@ -1440,12 +1348,12 @@ html input[disabled] {
 }
 
 .btn--small {
-  padding: 4px 5px;
-  font-size: em(12px);
+  padding: rem(4px) rem(5px);
+  font-size: rem(12px);
 }
 
 .btn--large {
-  padding: 12px 15px;
+  padding: rem(12px) rem(15px);
   font-size: em(16px);
 }
 
@@ -1466,14 +1374,14 @@ html input[disabled] {
   #Lists
 ==============================================================================*/
 ul, ol {
-  margin: 0 0 ($gutter / 2) 20px;
+  margin: 0 0 ($gutter / 2) rem(20px);
   padding: 0;
 }
 
 ol { list-style: decimal; }
 ul ul, ul ol,
-ol ol, ol ul { margin: 4px 0 5px 20px; }
-li { margin-bottom: 0.25em; }
+ol ol, ol ul { margin: rem(4px) 0 rem(5px) rem(20px); }
+li { margin-bottom: 0.25rem; }
 
 ul.square { list-style: square outside; }
 ul.disc { list-style: disc outside; }
@@ -1504,7 +1412,7 @@ table {
 
 table.full {
   width: 100%;
-  margin-bottom: 1em;
+  margin-bottom: 1rem;
 }
 
 .table-wrap {
@@ -1520,7 +1428,7 @@ th {
 th, td {
   text-align: left;
   padding: $gutter / 2;
-  border: 1px solid $colorBorder;
+  border: rem(1px) solid $colorBorder;
 }
 
 
@@ -1600,7 +1508,7 @@ form {
 @include media-breakpoint-up(md) {
   input,
   textarea {
-    font-size: 16px;
+    font-size: rem(16px);
   }
 }
 
@@ -1639,7 +1547,7 @@ input[type="image"] {
 }
 
 fieldset {
-  border: 1px solid $colorBorder;
+  border: rem(1px) solid $colorBorder;
   padding: $gutter / 2;
 }
 
@@ -1656,13 +1564,13 @@ input[type="submit"] {
 input,
 textarea,
 select {
-  border: 1px solid $colorBorder;
+  border: rem(1px) solid $colorBorder;
   max-width: 100%;
-  padding: 8px 10px;
+  padding: rem(8px) rem(10px);
   border-radius: $radius;
 
   &:focus {
-    border: 1px solid darken($colorBorder, 10%);
+    border: rem(1px) solid darken($colorBorder, 10%);
   }
 
   &[disabled],
@@ -1678,14 +1586,14 @@ select {
 }
 
 textarea {
-  min-height: 100px;
+  min-height: rem(100px);
 }
 
 /*================ Input element overrides ================*/
 input[type="checkbox"],
 input[type="radio"] {
   display: inline;
-  margin: 0 8px 0 0;
+  margin: 0 rem(8px) 0 0;
   padding: 0;
   width: auto;
 }
@@ -1716,8 +1624,8 @@ select {
     position: right 10px center;
     color: transparent;
   }
-  padding-right: 28px;
-  text-indent: 0.01px;
+  padding-right: rem(28px);
+  text-indent: rem(0.01px);
   text-overflow: '';
   cursor: pointer;
 
@@ -1750,7 +1658,7 @@ select::-ms-expand {
   width: 0;
   margin-bottom: 0;
   overflow: hidden;
-  clip: (1px, 1px, 1px, 1px);
+  clip: (rem(1px), rem(1px), rem(1px), rem(1px));
 
   // No placeholders, so force show labels
   .ie9 &,
@@ -1772,7 +1680,7 @@ label[for] {
   select,
   textarea {
     display: block;
-    margin-bottom: 10px;
+    margin-bottom: rem(10px);
   }
 
   input[type="radio"],
@@ -1821,8 +1729,8 @@ label.error {
     &::-moz-focus-inner {
       border: 0;
       padding: 0;
-      margin-top: -1px;
-      margin-bottom: -1px;
+      margin-top: rem(-1px);
+      margin-bottom: rem(-1px);
     }
   }
 }
@@ -1836,7 +1744,7 @@ label.error {
 
 .input-group .btn,
 .input-group .input-group-field {
-  height: 37px;
+  height: rem(40px);
 }
 
 .input-group .input-group-field {
@@ -1851,128 +1759,10 @@ label.error {
 }
 
 /*============================================================================
-  #Icons
-==============================================================================*/
-.icon-fallback-text .icon {
-  display: none;
-
-  .supports-fontface & {
-    display: inline-block;
-  }
-}
-
-/*============================================================================
-  A generic way to visually hide content while
-  remaining accessible to screen readers (h5bp.com)
-==============================================================================*/
-.supports-fontface .fallback-text {
-  clip: rect(0, 0, 0, 0);
-  overflow: hidden;
-  position: absolute;
-  height: 1px;
-  width: 1px;
-}
-
-.icon:before {
-  display: none;
-}
-
-.supports-fontface .icon:before {
-  display: inline;
-  font-family: $socialIconFontStack;
-  text-decoration: none;
-  speak: none; // future fallback, limited in effect currently
-  font-style: normal;
-  font-weight: normal;
-  font-variant: normal;
-  text-transform: none;
-  line-height: 1;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-/*================ Icon mapping ================*/
-.icon-american_express:before { content: "\41"; }
-.icon-arrow-down:before { content: "\e607"; }
-.icon-bitcoin:before { content: "\42"; }
-.icon-cart:before { content: "\e600"; }
-.icon-cirrus:before { content: "\43"; }
-.icon-dankort:before { content: "\64"; }
-.icon-diners_club:before { content: "\63"; }
-.icon-discover:before { content: "\44"; }
-.icon-facebook:before { content: "\66"; }
-.icon-fancy:before { content: "\46"; }
-.icon-google:before { content: "\67"; }
-.icon-google_wallet:before { content: "\47"; }
-.icon-grid-view:before { content: "\e603"; }
-.icon-hamburger:before { content: "\e601"; }
-.icon-instagram:before { content: "\69"; }
-.icon-interac:before { content: "\49"; }
-.icon-jcb:before { content: "\4a"; }
-.icon-list-view:before { content: "\e604"; }
-.icon-maestro:before { content: "\6d"; }
-.icon-master:before { content: "\4d"; }
-.icon-minus:before { content: "\e602"; }
-.icon-paypal:before { content: "\50"; }
-.icon-pinterest:before { content: "\70"; }
-.icon-plus:before { content: "\e605"; }
-.icon-rss:before { content: "\72"; }
-.icon-search:before { content: "\73"; }
-.icon-stripe:before { content: "\53"; }
-.icon-tumblr:before { content: "\74"; }
-.icon-twitter:before { content: "\54"; }
-.icon-vimeo:before { content: "\76"; }
-.icon-visa:before { content: "\56"; }
-.icon-x:before { content: "\e606"; }
-.icon-youtube:before { content: "\79"; }
-
-.payment-icons {
-  @include prefix('user-select', 'none');
-  cursor: default;
-
-  li {
-    margin: 0 ($gutter / 4) ($gutter / 4);
-    color: {{ settings.color_footer_social_link }};
-    cursor: default;
-  }
-
-  .icon {
-    font-size: rem(30px);
-    line-height: 1rem;
-  }
-
-  .fallback-text {
-    text-transform: capitalize;
-  }
-}
-
-.social-icons li {
-  margin: 0 ($gutter / 2) ($gutter / 2);
-  vertical-align: middle;
-
-  @include media-breakpoint-up (sm) {
-    margin-left: 0;
-  }
-
-  .icon {
-    font-size: 30px;
-    line-height: 26px;
-  }
-
-  a {
-    color: {{ settings.color_footer_social_link }};
-
-    &:hover {
-      color: darken({{ settings.color_footer_social_link }}, 10%);
-    }
-  }
-}
-
-/*============================================================================
   #Pagination
 ==============================================================================*/
 .pagination {
-  margin-bottom: 1em;
+  margin-bottom: 1rem;
 }
 
 /*================ Custom Pagination ================*/
@@ -1991,24 +1781,24 @@ label.error {
 .pagination-custom > li > span {
   position: relative;
   float: left;
-  padding: 5px 10px;
-  margin-left: -1px;
+  padding: rem(5px) rem(10px);
+  margin-left: rem(-1px);
   line-height: 1.42;
   text-decoration: none;
-  border: 1px solid $colorBorder;
+  border: rem(1px) solid $colorBorder;
 }
 
 .pagination-custom > li:first-child > a,
 .pagination-custom > li:first-child > span {
   margin-left: 0;
-  border-bottom-left-radius: 4px;
-  border-top-left-radius: 4px;
+  border-bottom-left-radius: rem(4px);
+  border-top-left-radius: rem(4px);
 }
 
 .pagination-custom > li:last-child > a,
 .pagination-custom > li:last-child > span {
-  border-top-right-radius: 4px;
-  border-bottom-right-radius: 4px;
+  border-top-right-radius: rem(4px);
+  border-bottom-right-radius: rem(4px);
 }
 
 .pagination-custom > li > a:hover,
@@ -2038,38 +1828,38 @@ label.error {
 
 .pagination-custom-lg > li > a,
 .pagination-custom-lg > li > span {
-  padding: 10px 16px;
-  font-size: em(18px);
+  padding: rem(10px) rem(16px);
+  font-size: rem(18px);
 }
 
 .pagination-custom-lg > li:first-child > a,
 .pagination-custom-lg > li:first-child > span {
-  border-bottom-left-radius: 6px;
-  border-top-left-radius: 6px;
+  border-bottom-left-radius: rem(6px);
+  border-top-left-radius: rem(6px);
 }
 
 .pagination-custom-lg > li:last-child > a,
 .pagination-custom-lg > li:last-child > span {
-  border-top-right-radius: 6px;
-  border-bottom-right-radius: 6px;
+  border-top-right-radius: rem(6px);
+  border-bottom-right-radius: rem(6px);
 }
 
 .pagination-custom-sm > li > a,
 .pagination-custom-sm > li > span {
-  padding: 5px 10px;
-  font-size: em(12px);
+  padding: rem(5px) rem(10px);
+  font-size: rem(12px);
 }
 
 .pagination-custom-sm > li:first-child > a,
 .pagination-custom-sm > li:first-child > span {
-  border-bottom-left-radius: 3px;
-  border-top-left-radius: 3px;
+  border-bottom-left-radius: rem(3px);
+  border-top-left-radius: rem(3px);
 }
 
 .pagination-custom-sm > li:last-child > a,
 .pagination-custom-sm > li:last-child > span {
-  border-top-right-radius: 3px;
-  border-bottom-right-radius: 3px;
+  border-top-right-radius: rem(3px);
+  border-bottom-right-radius: rem(3px);
 }
 
 
@@ -2081,13 +1871,16 @@ label.error {
   z-index: 100; //Above everything
   @include flexbox;
   @include flex-flow();
-  @include media-breakpoint-up(sm) {
+  @include media-breakpoint-up(md) {
     padding: ($gutter / 2) 0;
+  }
+  @include media-breakpoint-up(lg){
+    padding: ($gutter / 2) $gutter;
   }
 }
 
 .site-branding {
-  @include flex(0 0 {{ settings.logo_max_width }}px);
+  @include flex(0);
 
   @include media-breakpoint-up(md) {
 
@@ -2103,8 +1896,19 @@ label.error {
     display: block;
   }
 
+  a {
+    padding: rem(10px) 0;
+    @include media-breakpoint-up(md) {
+      padding: rem(5px);
+    }
+  }
+
   img {
     margin: 0 auto;
+    height: rem(20px);
+    @include media-breakpoint-up(md) {
+      height: rem(30px);
+    }
   }
   h1 {
     margin: 0;
@@ -2112,14 +1916,14 @@ label.error {
   }
 }
 
-/*================ Header mobile Buttons ================*/
+/*================ Header Toggles ================*/
 .menu-toggle {
-  @include media-breakpoint-up(md) {
+  @include media-breakpoint-up(lg) {
     display: none;
   }
 
   .button {
-    @include iconBtn('{{ "icon-menu.svg" | asset_url }}');
+    @include iconBtn('{{ "icon-menu.png" | asset_url }}');
   }
 }
 
@@ -2127,38 +1931,43 @@ label.error {
   display: block;
   margin-left: auto; // Align cart button right
   @include media-breakpoint-up(md) {
-    display: none;
+    margin-left: 0;  // Align right margin goes to search
   }
 
   .button {
-    @include iconBtn('{{ "icon-menu.svg" | asset_url }}')
+    @include iconBtn('{{ "icon-bag.png" | asset_url }}');
+    .text {
+      display: none;
+      text-transform: uppercase;
+      font-weight: bold;
+      padding: rem(10px) 0;
+      margin-right: rem(10px);
+    }
+    @include media-breakpoint-up(sm) {
+      display: flex;
+      .text {
+        display: block;
+      }
+    }
+
+    @include media-breakpoint-up(lg) {
+      .icon {
+        background-position: 0 rem(5px);
+      }
+      .text {
+        padding: rem(18px) 0 rem(2px);
+      }
+    }
   }
 }
 
 /*================ Header Search ================*/
 .header-search {
-  max-width: 400px;
+  max-width: rem(220px);
   margin-left: auto;
   width: 100%;
   display: none;
 
-  @include media-breakpoint-up(md) {
-    display: block;
-  }
-}
-
-.search-bar {
-  /*max-width: 100%;
-
-  @include media-breakpoint-up (md) {
-    margin-left: auto;
-    margin-right: auto;
-  }*/
-}
-
-/*================ Cart Link ================*/
-.cart-link {
-  display: none;
   @include media-breakpoint-up(md) {
     display: block;
   }
@@ -2178,57 +1987,56 @@ label.error {
 .site-nav {
   font-size: 1rem;
   cursor: default;
+  margin: 0 0 0 rem(10px);
+  padding: rem(18px) 0 rem(2px);
 
   li {
     margin: 0;
     display: block;
   }
 
+  a {
+    display: block;
+    text-decoration: none;
+    white-space: nowrap;
+    color: $colorNavText;
+
+    &:hover,
+    &:active,
+    &:focus {
+      text-decoration: underline;
+    }
+
+    .icon-arrow-down {
+      position: relative;
+      top: rem(-2px);
+      font-size: rem(10px);
+      padding-left: $gutter / 4;
+    }
+  }
+
   > li {
     position: relative;
     display: inline-block;
-  }
-}
+    margin-left: rem(30px);
 
-.site-nav__link {
-  display: block;
-  text-decoration: none;
-  padding: $gutter / 2;
-  white-space: nowrap;
-  color: $colorNavText;
-
-  &:hover,
-  &:active,
-  &:focus {
-    color: darken($colorNavText, 15%);
-  }
-
-  .icon-arrow-down {
-    position: relative;
-    top: -2px;
-    font-size: 10px;
-    padding-left: $gutter / 4;
-  }
-
-  .site-nav--active > & {
-    font-weight: bold;
-  }
-
-  .site-nav--mobile & {
-    display: inline-block;
+    > a {
+      text-transform: uppercase;
+      font-weight: bold;
+    }
   }
 }
 
 /*================ Dropdowns ================*/
-.site-nav__dropdown {
+.dropdown {
   display: none;
   position: absolute;
   left: 0;
   margin: 0;
   z-index: $zindexNavDropdowns;
 
-  .supports-no-touch .site-nav--has-dropdown:hover &,
-  .site-nav--has-dropdown.nav-hover &,
+  .supports-no-touch .has-dropdown:hover &,
+  .has-dropdown.nav-hover &,
   .nav-focus + & {
     display: block;
   }
@@ -2247,7 +2055,7 @@ label.error {
 /*================ Search bar in header ================*/
 .nav-search {
   position: relative;
-  padding: 10px 0;
+  padding: rem(10px) 0;
 
   @include media-breakpoint-up (md) {
     padding: 0 0 ($gutter / 2);
@@ -2292,7 +2100,7 @@ label.error {
     bottom: 0;
     left: $gutter / 2;
     right: $gutter / 2;
-    border-bottom: 1px solid $colorDrawerBorder;
+    border-bottom: rem(1px) solid $colorDrawerBorder;
   }
 
   .mobile-nav > &:last-child:after {
@@ -2368,7 +2176,7 @@ label.error {
 
   .mobile-nav--expanded + & {
     visibility: visible;
-    max-height: 700px;
+    max-height: rem(700px);
     @include transition(all 700ms cubic-bezier(0.57, 0.06, 0.05, 0.95));
   }
 
@@ -2423,7 +2231,7 @@ label.error {
 .drawer--left {
   width: $drawerNavWidth;
   left: -$drawerNavWidth;
-  border-right: 1px solid $colorDrawerBorder;
+  border-right: rem(1px) solid $colorDrawerBorder;
 
   .js-drawer-open-left & {
     display: block;
@@ -2438,7 +2246,7 @@ label.error {
 .drawer--right {
   width: $drawerCartWidth;
   right: -$drawerCartWidth;
-  border-left: 1px solid $colorDrawerBorder;
+  border-left: rem(1px) solid $colorDrawerBorder;
 
   .js-drawer-open-right & {
     display: block;
@@ -2472,10 +2280,10 @@ label.error {
 
 .drawer__header {
   display: table;
-  height: 70px;
+  height: rem(70px);
   width: 100%;
   margin-bottom: $gutter / 2;
-  border-bottom: 1px solid $colorDrawerBorder;
+  border-bottom: rem(1px) solid $colorDrawerBorder;
 }
 
 .drawer__title,
@@ -2491,14 +2299,14 @@ label.error {
 .drawer__close {
   width: 1%;
   text-align: center;
-  font-size: em(18px);
+  font-size: rem(18px);
 }
 
 .drawer__close button {
   position: relative;
-  right: -20px;
+  right: rem(-20px);
   height: 100%;
-  padding: 0 20px;
+  padding: 0 rem(20px);
   color: inherit;
 
   &:active,
@@ -2513,9 +2321,8 @@ label.error {
 
 .main-content {
   @include make-container();
-  //@include make-container-max-widths();
   background-color: $colorBody;
-  margin-top: 40px;
+  margin-top: rem(40px);
 
   .template-index & {
     margin-top: 0;
@@ -2523,7 +2330,7 @@ label.error {
 
   @include media-breakpoint-up(md) {
     margin-bottom: $footerHeight;
-    margin-top: 60px;
+    margin-top: rem(60px);
   }
   // Put in front of footer and behind header
   position: relative;
@@ -2577,8 +2384,8 @@ label.error {
   a,
   span {
     display: inline-block;
-    padding: 0 7px 0 0;
-    margin-right: 7px;
+    padding: 0 rem(7px) 0 0;
+    margin-right: rem(7px);
 
     &:first-child {
       padding-left: 0;
@@ -2621,10 +2428,10 @@ label.error {
 .note,
 .errors {
   border-radius: $radius;
-  padding: 6px 12px;
+  padding: rem(6px) rem(12px);
   margin-bottom: $gutter / 2;
-  border: 1px solid transparent;
-  font-size: 0.9em;
+  border: rem(1px) solid transparent;
+  font-size: 0.9rem;
   text-align: left;
 
   ul,
@@ -2649,7 +2456,7 @@ label.error {
 .errors {
   ul {
     list-style: disc outside;
-    margin-left: 20px;
+    margin-left: rem(20px);
   }
 }
 
@@ -2692,7 +2499,7 @@ label.error {
   position: relative;
   margin-top: $gutter;
   padding-top: $gutter;
-  border-top: 1px solid $colorBorder;
+  border-top: rem(1px) solid $colorBorder;
 
   &:first-child {
     margin-top: 0;
@@ -2738,7 +2545,7 @@ label.error {
 .cart__mini-labels {
   display: block;
   margin: ($gutter / 3) 0;
-  font-size: em(12px);
+  font-size: rem(12px);
 
   @include media-breakpoint-up (lg) {
     display: none;
@@ -2782,7 +2589,7 @@ label.error {
 
 .ajaxcart__product {
   position: relative;
-  max-height: 500px;
+  max-height: rem(500px);
 
   &.is-removed {
     max-height: 0;
@@ -2796,13 +2603,13 @@ label.error {
 .ajaxcart__row {
   padding-bottom: $gutter / 2;
   margin-bottom: $gutter / 2;
-  border-bottom: 1px solid $colorDrawerBorder;
+  border-bottom: rem(1px) solid $colorDrawerBorder;
 }
 
 .ajaxcart__product-image {
   display: block;
   overflow: hidden;
-  margin-bottom: 15px;
+  margin-bottom: rem(15px);
 
   img {
     display: block;
@@ -2823,9 +2630,9 @@ label.error {
 /*================ Quantity Selectors ================*/
 .js-qty {
   position: relative;
-  margin-bottom: 1em;
-  max-width: 100px;
-  min-width: 75px;
+  margin-bottom: 1rem;
+  max-width: rem(100px);
+  min-width: rem(75px);
   overflow: visible;
 
   input {
@@ -2833,7 +2640,7 @@ label.error {
     background: none;
     text-align: center;
     width: 100%;
-    padding: 5px 25px;
+    padding: rem(5px) rem(25px);
     margin: 0;
   }
 }
@@ -2845,7 +2652,7 @@ label.error {
   top: 0;
   bottom: 0;
   border: 0 none;
-  padding: 0 8px;
+  padding: 0 rem(8px);
   background: none;
   text-align: center;
   overflow: hidden;
@@ -2859,12 +2666,12 @@ label.error {
 
 .js-qty__adjust--plus {
   right: 0;
-  border-left: 1px solid $colorBorder;
+  border-left: rem(1px) solid $colorBorder;
 }
 
 .js-qty__adjust--minus {
   left: 0;
-  border-right: 1px solid $colorBorder;
+  border-right: rem(1px) solid $colorBorder;
 }
 
 /*================ Quantity Selectors in Ajax Cart ================*/

@@ -62,7 +62,7 @@
 </head>
 
 
-<body id="{{ page_title | handle }}" class="{% if customer %}customer-logged-in {% endif %}template-{{ template | replace: '.', ' ' | truncatewords: 1, '' | handle }}" >
+<body id="{{ page_title | handle }}" class="{% if customer %}customer-logged-in {% endif %}template-{{ template | replace: '.', '-' | truncatewords: 1, '' | handle }}" >
 
 <!-- MOBILE NAV BEGINS -->
 
@@ -248,25 +248,26 @@
     {% include 'search-bar' %}
   </div>
   <div class="cart-toggle">
-    <button type="button" class="button js-drawer-open-right" aria-controls="CartDrawer" aria-expanded="false">
+      <a href="{{ urls.cart }}" class="button js-drawer-open-right" aria-controls="CartDrawer" aria-expanded="false">
       <span class="icon" aria-hidden="true"></span>
-      <span class="fallback-text">{{ 'layout.cart.title' | t }}</span>
-    </button>
+      <span class="text">Shopping Bag</span>
+    </a>
   </div>
+  {% comment %}
+  <!-- Remove cart-link -->
   <div class="cart-link">
     <a href="{{ urls.cart }}" class="js-drawer-open-right" aria-controls="CartDrawer" aria-expanded="false">
       <span class="link-icon">
         <span class="icon" aria-hidden="true"></span>
       </span>
       {{ 'layout.cart.title' | t }}
-      {% comment %}
       <!-- Remove cart details -->
       (<span id="CartCount">{{ cart.item_count }}</span>
       {{ 'layout.cart.items_count' | t: count: cart.item_count }}
       <span id="CartCost">{{ cart.total_price | money }}</span>)
-      {% endcomment %}
+
     </a>
-    {% comment %}
+
     <!-- Hide customer login/logout -->
     <div>
       {% if customer %}
@@ -276,17 +277,17 @@
         | <a href="{{ urls.account_register }}">{{ 'layout.customer.create_account' | t}}</a>
       {% endif %}
     </div>
-    {% endcomment %}
   </div>
+  {% endcomment %}
 </header>
 
 
 
-<main class="wrapper main-content" role="main">
+<main class="main-content" role="main">
 
     {{ content_for_layout }}
 
- </main>
+</main>
 
   {% include 'footer' %}
 
