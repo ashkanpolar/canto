@@ -1871,11 +1871,17 @@ label.error {
   z-index: 100; //Above everything
   @include flexbox;
   @include flex-flow();
+  background: #fff;
+
   @include media-breakpoint-up(md) {
-    padding: ($gutter / 2) 0;
+    padding: ($gutter / 4) 0;
   }
   @include media-breakpoint-up(lg){
-    padding: ($gutter / 2) $gutter;
+    padding: ($gutter / 4) $gutter;
+  }
+
+  &.transparent {
+    background: transparent;
   }
 }
 
@@ -1933,6 +1939,9 @@ label.error {
   @include media-breakpoint-up(md) {
     margin-left: 0;  // Align right margin goes to search
   }
+  @include media-breakpoint-up(xl) {
+    margin-left: $gutter;
+  }
 
   .button {
     @include iconBtn('{{ "icon-bag.png" | asset_url }}');
@@ -1970,6 +1979,35 @@ label.error {
 
   @include media-breakpoint-up(md) {
     display: block;
+  }
+  @include media-breakpoint-up(lg) {
+    margin-top: rem(5px);
+    margin-bottom: rem(-5px);
+  }
+}
+
+.search-bar{
+  @include flexbox;
+  @include flex-flow();
+  position: relative;
+
+  .search {
+    width: 100%;
+    padding: rem(10px) rem(10px) rem(9px) rem(50px);
+    background: transparent;
+    border: none;
+    border-bottom: rem(1px) solid $colorBorder;
+    &:active,
+    &:focus {
+      background: #fff;
+    }
+  }
+  .label {
+    display: block;
+    position: absolute;
+    left: 0;
+    @include iconBtn('{{ "icon-search.png" | asset_url }}');
+
   }
 }
 
@@ -2052,17 +2090,6 @@ label.error {
   }
 }
 
-/*================ Search bar in header ================*/
-.nav-search {
-  position: relative;
-  padding: rem(10px) 0;
-
-  @include media-breakpoint-up (md) {
-    padding: 0 0 ($gutter / 2);
-    margin: 0 auto;
-    text-align: center;
-  }
-}
 /*============================================================================
   #Mobile Nav
   - List of items inside the mobile drawer
