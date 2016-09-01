@@ -1,3 +1,6 @@
 .idea/
 prototype/
 *.zip
+
+.DS_store
+
