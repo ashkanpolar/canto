@@ -4,7 +4,7 @@
 <footer class="site-footer" role="contentinfo">
     {% if settings.footer_newsletter_enable %}
     <div class="newsletter">
-        <h3>{{ 'layout.footer.newsletter_title' | t }}</h3>
+        <h3>Join our mailing list</h3>
         {% include 'newsletter-form' %}
     </div>
     {% endif %}
@@ -38,9 +38,14 @@
       {% if settings.footer_quicklinks_enable %}
         <div class="collection-links">
           <ul>
-            {% for link in navigation[settings.footer_quicklinks_linklist].links %}
-              <li><a href="{{ link.url }}">{{ link.name }}</a></li>
-            {% endfor %}
+            <li>
+              <a href="collections/collection">Collection</a>
+              <ul>
+              {% for link in navigation[settings.footer_quicklinks_linklist].links %}
+                <li><a href="{{ link.url }}">{{ link.name }}</a></li>
+              {% endfor %}
+              </ul>
+            </li>
           </ul>
         </div>
       {% endif %}

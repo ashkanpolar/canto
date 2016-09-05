@@ -745,6 +745,72 @@ $socialIconFontStack: 'icons';
 }
 
 /*============================================================================
+  #Flex Grid Setup
+    - Based on bootstrap 4 flexbox grid
+    - Breakpoints defined above, under #Breakpoint and Grid Variables
+==============================================================================*/
+
+/// Grid system
+//
+// Generate semantic grid columns with these mixins.
+
+@mixin make-container() {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+// For each breakpoint, define the maximum width of the container in a media query
+@mixin make-container-max-widths($max-widths: $container-max-widths) {
+  @each $breakpoint, $container-max-width in $max-widths {
+    @include media-breakpoint-up($breakpoint) {
+      max-width: $container-max-width;
+    }
+  }
+}
+
+@mixin make-row($gutter: $grid-gutter-width) {
+  @include flexbox;
+  @include flex-flow(row wrap);
+  margin-left:  ($gutter / -2);
+  margin-right: ($gutter / -2);
+}
+
+@mixin make-col($gutter: $grid-gutter-width) {
+  position: relative;
+  min-height: rem(1px);
+  padding-left:  ($gutter / 2);
+  padding-right: ($gutter / 2);
+}
+
+@mixin make-col-span($size, $columns: $grid-columns) {
+  @include flex(0, 0, percentage($size / $columns));
+}
+
+@mixin make-col-offset($size, $columns: $grid-columns) {
+  margin-left: percentage($size / $columns);
+}
+
+@mixin make-col-push($size, $columns: $grid-columns) {
+  left: if($size > 0, percentage($size / $columns), auto);
+}
+
+@mixin make-col-pull($size, $columns: $grid-columns) {
+  right: if($size > 0, percentage($size / $columns), auto);
+}
+
+@mixin make-col-modifier($type, $size, $columns) {
+  // Work around the lack of dynamic mixin @include support (https://github.com/sass/sass/issues/626)
+  @if $type == push {
+    @include make-col-push($size, $columns);
+  } @else if $type == pull {
+    @include make-col-pull($size, $columns);
+  } @else if $type == offset {
+    @include make-col-offset($size, $columns);
+  }
+}
+
+/*============================================================================
   #Normalize
 ==============================================================================*/
 *, input, :before, :after {
@@ -867,72 +933,6 @@ textarea { // 1
 }
 
 /*============================================================================
-  #Flex Grid Setup
-    - Based on bootstrap 4 flexbox grid
-    - Breakpoints defined above, under #Breakpoint and Grid Variables
-==============================================================================*/
-
-/// Grid system
-//
-// Generate semantic grid columns with these mixins.
-
-@mixin make-container() {
-  margin-left: auto;
-  margin-right: auto;
-}
-
-
-// For each breakpoint, define the maximum width of the container in a media query
-@mixin make-container-max-widths($max-widths: $container-max-widths) {
-  @each $breakpoint, $container-max-width in $max-widths {
-    @include media-breakpoint-up($breakpoint) {
-      max-width: $container-max-width;
-    }
-  }
-}
-
-@mixin make-row($gutter: $grid-gutter-width) {
-  @include flexbox;
-  @include flex-flow(row wrap);
-  margin-left:  ($gutter / -2);
-  margin-right: ($gutter / -2);
-}
-
-@mixin make-col($gutter: $grid-gutter-width) {
-  position: relative;
-  min-height: rem(1px);
-  padding-left:  ($gutter / 2);
-  padding-right: ($gutter / 2);
-}
-
-@mixin make-col-span($size, $columns: $grid-columns) {
-  @include flex(0, 0, percentage($size / $columns));
-}
-
-@mixin make-col-offset($size, $columns: $grid-columns) {
-  margin-left: percentage($size / $columns);
-}
-
-@mixin make-col-push($size, $columns: $grid-columns) {
-  left: if($size > 0, percentage($size / $columns), auto);
-}
-
-@mixin make-col-pull($size, $columns: $grid-columns) {
-  right: if($size > 0, percentage($size / $columns), auto);
-}
-
-@mixin make-col-modifier($type, $size, $columns) {
-  // Work around the lack of dynamic mixin @include support (https://github.com/sass/sass/issues/626)
-  @if $type == push {
-    @include make-col-push($size, $columns);
-  } @else if $type == pull {
-    @include make-col-pull($size, $columns);
-  } @else if $type == offset {
-    @include make-col-offset($size, $columns);
-  }
-}
-
-/*============================================================================
   #Basic Styles
 ==============================================================================*/
 html {
@@ -953,32 +953,6 @@ body {
 .is-transitioning {
   display: block !important;
   visibility: visible !important;
-}
-
-.display-table {
-  display: table;
-  table-layout: fixed;
-  width: 100%;
-}
-
-.display-table-cell {
-  display: table-cell;
-  vertical-align: middle;
-  float: none;
-}
-
-@include media-breakpoint-up (lg) {
-  .large--display-table {
-    display: table;
-    table-layout: fixed;
-    width: 100%;
-  }
-
-  .large--display-table-cell {
-    display: table-cell;
-    vertical-align: middle;
-    float: none;
-  }
 }
 
 .clearfix {
@@ -1148,7 +1122,6 @@ hr {
 
 @include media-breakpoint-up (lg) {
   .section-header {
-    display: table;
     width: 100%;
   }
 
@@ -1288,13 +1261,12 @@ html input[disabled] {
   cursor: default;
 }
 
-.btn,
-.rte .btn {
+.button,
+.rte .button {
   display: inline-block;
-  padding: rem(8px) rem(10px);
+  padding: rem(9px) rem(10px);
   width: auto;
   margin: 0;
-  line-height: 1.42;
   font-weight: bold;
   text-decoration: none;
   text-align: center;
@@ -1302,6 +1274,7 @@ html input[disabled] {
   white-space: nowrap;
   cursor: pointer;
   border: 1px solid transparent;
+  text-transform: uppercase;
   @include prefix('user-select', 'none');
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -1330,10 +1303,11 @@ html input[disabled] {
   }
 }
 
-.btn--secondary,
-.rte .btn--secondary {
+.button.secondary,
+.rte .button.secondary {
   @extend .btn;
   background-color: $colorBtnSecondary;
+  color: $colorBtnSecondaryText;
 
   &:hover {
     background-color: $colorBtnSecondaryHover;
@@ -1347,17 +1321,17 @@ html input[disabled] {
   }
 }
 
-.btn--small {
+.button.small {
   padding: rem(4px) rem(5px);
   font-size: rem(12px);
 }
 
-.btn--large {
+.button.large {
   padding: rem(12px) rem(15px);
   font-size: em(16px);
 }
 
-.btn--full {
+.button.full {
   width: 100%;
 }
 
@@ -1374,7 +1348,7 @@ html input[disabled] {
   #Lists
 ==============================================================================*/
 ul, ol {
-  margin: 0 0 ($gutter / 2) rem(20px);
+  margin: 0 0 ($gutter / 2) ($gutter / 2) ;
   padding: 0;
 }
 
@@ -1707,9 +1681,8 @@ label.error {
 
 /*================ Input Group ================*/
 .input-group {
+  @include flexbox;
   position: relative;
-  display: table;
-  border-collapse: separate;
 
   .input-group-field:first-child,
   .input-group-btn:first-child,
@@ -1737,8 +1710,7 @@ label.error {
 
 .input-group-field,
 .input-group-btn {
-  display: table-cell;
-  vertical-align: middle;
+  @include flex(1);
   margin: 0;
 }
 
@@ -1754,8 +1726,6 @@ label.error {
 .input-group-btn {
   position: relative;
   white-space: nowrap;
-  width: 1%;
-  padding: 0;
 }
 
 /*============================================================================
@@ -1928,7 +1898,7 @@ label.error {
     display: none;
   }
 
-  .button {
+  .toggle {
     @include iconBtn('{{ "icon-menu.png" | asset_url }}');
   }
 }
@@ -1943,7 +1913,7 @@ label.error {
     margin-left: $gutter;
   }
 
-  .button {
+  .toggle {
     @include iconBtn('{{ "icon-bag.png" | asset_url }}');
     .text {
       display: none;
@@ -2072,6 +2042,7 @@ label.error {
   left: 0;
   margin: 0;
   z-index: $zindexNavDropdowns;
+  min-width: 100%;
 
   .supports-no-touch .has-dropdown:hover &,
   .has-dropdown.nav-hover &,
@@ -2379,6 +2350,52 @@ label.error {
   @include media-breakpoint-up(md) {
     @include vfixelement(bottom);
     z-index: 1; //Behind main content
+  }
+
+  .newsletter,
+  .footer-navigation,
+  .copyright {
+    text-align: center;
+  }
+
+  .newsletter,
+  .footer-navigation {
+    @include make-container;
+    @include make-container-max-widths((xs: rem(640px), lg: rem(660px)));
+    padding: 0 rem(10px);
+    margin-bottom: rem(60px);
+    @include media-breakpoint-up(md) {
+      padding: 0 rem(20px);
+    }
+  }
+
+  .newsletter {
+    .newsletter-form {
+      @include flexbox;
+      margin-top: rem(30px);
+    }
+
+    .email-input {
+      min-width: 0;
+      @include flex(1);
+      background: #fce29a;
+      border: none;
+    }
+
+    .button {
+      color: #ddd;
+      background: #222;
+
+    }
+  }
+
+  .collection-links,
+  .secondary-links {
+    list-style: none;
+    ul > li > a {
+      text-transform: uppercase;
+      font-weight: bold;
+    }
   }
 }
 

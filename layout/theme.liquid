@@ -215,7 +215,7 @@
 
 <header class="site-header{% if template == 'index' %} transparent{% endif %}" role="banner">
   <div class="menu-toggle">
-    <button type="button" class="button js-drawer-open-left" aria-controls="NavDrawer" aria-expanded="false">
+    <button type="button" class="toggle js-drawer-open-left" aria-controls="NavDrawer" aria-expanded="false">
       <span class="icon" aria-hidden="true"></span>
       <span class="fallback-text">{{ 'layout.navigation.menu' | t }}</span>
     </button>
@@ -248,7 +248,7 @@
     {% include 'search-bar' %}
   </div>
   <div class="cart-toggle">
-      <a href="{{ urls.cart }}" class="button js-drawer-open-right" aria-controls="CartDrawer" aria-expanded="false">
+    <a href="{{ urls.cart }}" class="toggle js-drawer-open-right" aria-controls="CartDrawer" aria-expanded="false">
       <span class="icon" aria-hidden="true"></span>
       <span class="text">Shopping Bag</span>
     </a>
