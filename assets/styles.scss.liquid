@@ -118,7 +118,7 @@ $colorNavText: {{ settings.color_navigation_text }};
 // Site Footer
 $colorFooterBg: {{ settings.color_footer_bg }};
 $colorFooterText: {{ settings.color_footer_text }};
-$footerHeight: 620px; //include margin
+$footerHeight: 604px; //include margin
 
 // Helper colors
 $disabledGrey: #f6f6f6;
@@ -2410,12 +2410,19 @@ label.error {
   ul {
     list-style: none;
     margin: 0 0 rem(20px);
+
+    @include media-breakpoint-up(sm) {
+      margin: 0;
+    }
     ul {
-      margin-top: rem(20px);
+      margin: rem(20px) 0 0;
     }
   }
   > ul > li {
     margin-bottom: rem(20px);
+    &:last-child {
+      margin-bottom: 0;
+    }
     > a {
       text-transform: uppercase;
       font-weight: bold;
@@ -2434,7 +2441,7 @@ label.error {
 
   ul {
     list-style: none;
-    margin: rem(20px) 0;
+    margin: 0;
     li {
       display: inline-block;
       margin-right: rem(10px);

@@ -11,44 +11,18 @@
 
     <nav class="footer-navigation">
 
-      {% comment %}
-        Calculate the number of footer columns shown
-      {% endcomment %}
-      {% assign num_footer_columns = 0 %}
-      {% if settings.footer_quicklinks_enable %}
-        {% assign num_footer_columns = num_footer_columns | plus: 1 %}
-      {% endif %}
-      {% if settings.footer_social_enable %}
-        {% assign num_footer_columns = num_footer_columns | plus: 1 %}
-      {% endif %}
-      {% if settings.footer_newsletter_enable %}
-        {% assign num_footer_columns = num_footer_columns | plus: 1 %}
-      {% endif %}
-
-      {% case num_footer_columns %}
-        {% when 0 %}
-        {% when 1 %}
-          {% assign footer_column_width = '' %}
-        {% when 2 %}
-          {% assign footer_column_width = 'large--one-half' %}
-        {% when 3 %}
-          {% assign footer_column_width = 'large--one-third' %}
-      {% endcase %}
-
-      {% if settings.footer_quicklinks_enable %}
         <div class="collection-links">
           <ul>
             <li>
               <a href="collections/collection">Collection</a>
               <ul>
-              {% for link in navigation[settings.footer_quicklinks_linklist].links %}
+              {% for link in navigation.collection.links %}
                 <li><a href="{{ link.url }}">{{ link.name }}</a></li>
               {% endfor %}
               </ul>
             </li>
           </ul>
         </div>
-      {% endif %}
 
       {% if settings.footer_quicklinks_enable %}
       <div class="secondary-links">
