@@ -8,7 +8,7 @@
   <meta itemprop="image" content="{{ product.main_image.src | img_url: 'large' }}">
 
   <div class="container gallery mode-zoom" >
-    <div class="gallery">
+    <div class="image-gallery">
       <div class="main-image" id="ProductPhoto">
         {% if product.images.size == 0 %}
           {{ 'no-image.png' | asset_url | img_tag }}

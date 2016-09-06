@@ -1,36 +1,36 @@
-/*============================================================================
-  Table of Contents
-
-  #Breakpoint and Grid Variables
-  #General Variables
-  #Sass Mixins
-  #Normalize
-  #Grid Setup
-  #Basic Styles
-  #Helper Classes
-  #Typography
-  #Rich Text Editor
-  #Links and Buttons
-  #Lists
-  #Tables
-  #OOCSS Media Object
-  #Images and Iframes
-  #Forms
-  #Icons
-  #Pagination
-  #Site Header
-  #Site Nav and Dropdowns
-  #Mobile Nav
-  #Drawers
-  #Site Footer
-  #Product and Collection Grids
-  #Collection Filters
-  #Breadcrumbs
-  #Product Page
-  #Notes and Form Feedback
-  #Cart Page
-  #Ajax Cart Styles
-==============================================================================*/
+//============================================================================
+//  Table of Contents
+//
+//  #Breakpoint and Grid Variables
+//  #General Variables
+//  #Sass Mixins
+//  #Normalize
+//  #Grid Setup
+//  #Basic Styles
+//  #Helper Classes
+//  #Typography
+//  #Rich Text Editor
+//  #Links and Buttons
+//  #Lists
+//  #Tables
+//  #OOCSS Media Object
+//  #Images and Iframes
+//  #Forms
+//  #Icons
+//  #Pagination
+//  #Site Header
+//  #Site Nav and Dropdowns
+//  #Mobile Nav
+//  #Drawers
+//  #Site Footer
+//  #Product and Collection Grids
+//  #Collection Filters
+//  #Breadcrumbs
+//  #Product Page
+//  #Notes and Form Feedback
+//  #Cart Page
+//  #Ajax Cart Styles
+//==============================================================================
 
 // Convert all Pixel Values to rem
 $baseFontSize: 16px; // Henceforth known as 1em/rem
@@ -65,9 +65,9 @@ $grid-breakpoints: (
 // Define the maximum width of `.container` for different screen sizes.
 
 $container-max-widths: (
-        sm: 100%,
-        md: 100%,
-        lg: 100%,
+        //sm: 100%,
+        //md: 100%,
+        //lg: 100%,
         xl: rem(1200px)
 ) !default;
 
@@ -77,11 +77,11 @@ $container-max-widths: (
 // Set the number of columns and specify the width of the gutters.
 
 $grid-columns: 12 !default;
-$grid-gutter-width: 40px;
+$grid-gutter-width: 40px; //rem(40px);
 
-/*============================================================================
-  #General Variables
-==============================================================================*/
+//============================================================================
+//  #General Variables
+//============================================================================
 
 // Canto Colors
 $colorPrimary: {{ settings.color_primary }};
@@ -118,7 +118,7 @@ $colorNavText: {{ settings.color_navigation_text }};
 // Site Footer
 $colorFooterBg: {{ settings.color_footer_bg }};
 $colorFooterText: {{ settings.color_footer_text }};
-$footerHeight: 604px; //include margin
+$footerHeight: 544px; //include margin
 
 // Helper colors
 $disabledGrey: #f6f6f6;
@@ -145,7 +145,7 @@ $radius: 0;
 $zindexNavDropdowns: 500;
 $zindexDrawer: 1000;
 
-/*================ Typography ================*/
+// ================ Typography ================
 
 @import 'https://fonts.googleapis.com/css?family=Quicksand';
 $headerFontStack: 'Quicksand', 'HelveticaNeue', 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -166,9 +166,9 @@ $bodyFontStack: 'Quicksand', 'HelveticaNeue', 'Helvetica Neue', Helvetica, Arial
 $socialIconFontStack: 'icons';
 
 
-/*============================================================================
-  #Sass Mixins
-==============================================================================*/
+// ============================================================================
+//  #Sass Mixins
+// ============================================================================
 @mixin clearfix() {
   &:after {
     content: '';
@@ -744,11 +744,11 @@ $socialIconFontStack: 'icons';
   }
 }
 
-/*============================================================================
-  #Flex Grid Setup
-    - Based on bootstrap 4 flexbox grid
-    - Breakpoints defined above, under #Breakpoint and Grid Variables
-==============================================================================*/
+// ============================================================================
+//   #Flex Grid Setup
+//     - Based on bootstrap 4 flexbox grid
+//     - Breakpoints defined above, under #Breakpoint and Grid Variables
+// ==============================================================================
 
 /// Grid system
 //
@@ -772,15 +772,36 @@ $socialIconFontStack: 'icons';
 @mixin make-row($gutter: $grid-gutter-width) {
   @include flexbox;
   @include flex-flow(row wrap);
-  margin-left:  ($gutter / -2);
-  margin-right: ($gutter / -2);
+  @include media-breakpoint-up(lg) {
+    padding-left: ($gutter / 2);
+    padding-right: ($gutter / 2);
+  }
+}
+
+@mixin make-subrow($gutter: $grid-gutter-width) {
+  @include flexbox;
+  @include flex-flow(row wrap);
+  @include media-breakpoint-up(md) {
+    margin-left: ($gutter / -4);
+    margin-right: ($gutter / -4);
+  }
+  @include media-breakpoint-up(lg) {
+    margin-left: ($gutter / -2);
+    margin-right: ($gutter / -2);
+  }
 }
 
 @mixin make-col($gutter: $grid-gutter-width) {
   position: relative;
   min-height: rem(1px);
-  padding-left:  ($gutter / 2);
-  padding-right: ($gutter / 2);
+  @include media-breakpoint-up(md) {
+    padding-left: ($gutter / 4);
+    padding-right: ($gutter / 4);
+  }
+  @include media-breakpoint-up(lg) {
+    padding-left: ($gutter / 2);
+    padding-right: ($gutter / 2);
+  }
 }
 
 @mixin make-col-span($size, $columns: $grid-columns) {
@@ -810,9 +831,9 @@ $socialIconFontStack: 'icons';
   }
 }
 
-/*============================================================================
-  #Normalize
-==============================================================================*/
+//============================================================================
+// #Normalize
+//============================================================================
 *, input, :before, :after {
   @include box-sizing();
 }
@@ -932,24 +953,26 @@ textarea { // 1
   margin: 0;
 }
 
-/*============================================================================
-  #Basic Styles
-==============================================================================*/
+//============================================================================
+//  #Basic Styles
+//============================================================================
 html {
   font-size: $baseFontSize;
+  height: 100%;
 }
 
 body {
   background-color: $colorBody;
+  height: 100%;
 }
 
 [tabindex='-1']:focus {
   outline: none;
 }
 
-/*============================================================================
-  #Helper Classes
-==============================================================================*/
+//============================================================================
+//  #Helper Classes
+//============================================================================
 .is-transitioning {
   display: block !important;
   visibility: visible !important;
@@ -959,9 +982,9 @@ body {
   @include clearfix;
 }
 
-/*============================================================================
-  #Typography
-==============================================================================*/
+//============================================================================
+//  #Typography
+//============================================================================
 body,
 input,
 textarea,
@@ -989,7 +1012,7 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
-/*================ Use rem() Sass function to declare font-size ================*/
+//================ Use rem() Sass function to declare font-size ================
 h1 {
   font-size: rem(36px);
 }
@@ -1055,7 +1078,7 @@ sub {
   bottom: -0.5em;
 }
 
-/*================ Blockquotes ================*/
+//================ Blockquotes ================
 blockquote {
   font-size: 1.125rem;
   line-height: 1.45;
@@ -1082,7 +1105,7 @@ blockquote {
   }
 }
 
-/*================ Code ================*/
+//================ Code ================
 code, pre {
   background-color: #faf7f5;
   font-family: Consolas,monospace;
@@ -1098,7 +1121,7 @@ pre {
   margin: 0 0 $gutter;
 }
 
-/*================ Horizontal Rules ================*/
+//================ Horizontal Rules ================
 hr {
   clear: both;
   border-top: solid $colorBorder;
@@ -1115,7 +1138,7 @@ hr {
   }
 }
 
-/*================ Section Headers ================*/
+//================ Section Headers ================
 .section-header {
   margin-bottom: $gutter / 1.5;
 }
@@ -1175,7 +1198,7 @@ hr {
   height: rem(40px); // same as form elements
   overflow: hidden;
 
-  /*================ Only show on larger screens ================*/
+  //================ Only show on larger screens ================
   @include media-breakpoint-up (lg) {
     display: inline-block;
   }
@@ -1201,9 +1224,9 @@ hr {
   color: $colorPrimary;
 }
 
-/*============================================================================
-  #Rich Text Editor
-==============================================================================*/
+//============================================================================
+//  #Rich Text Editor
+//============================================================================
 .rte {
   margin-bottom: $gutter / 2;
 
@@ -1237,9 +1260,9 @@ hr {
   margin-bottom: 0;
 }
 
-/*============================================================================
-  #Links and Buttons
-==============================================================================*/
+//============================================================================
+//  #Links and Buttons
+//============================================================================
 a,
 .text-link {
   color: $colorLink;
@@ -1280,7 +1303,7 @@ html input[disabled] {
   -moz-appearance: none;
   border-radius: $radius;
 
-  /*================ Set primary button colors - can override later ================*/
+  //================ Set primary button colors - can override later ================
   background-color: $colorBtnPrimary;
   color: $colorBtnPrimaryText;
 
@@ -1335,7 +1358,7 @@ html input[disabled] {
   width: 100%;
 }
 
-/*================ Force an input/button to look like a text link ================*/
+//================ Force an input/button to look like a text link ================
 .text-link {
   display: inline;
   border: 0 none;
@@ -1344,9 +1367,9 @@ html input[disabled] {
   margin: 0;
 }
 
-/*============================================================================
-  #Lists
-==============================================================================*/
+//============================================================================
+//  #Lists
+//============================================================================
 ul, ol {
   margin: 0 0 ($gutter / 2) ($gutter / 2) ;
   padding: 0;
@@ -1375,9 +1398,9 @@ ol.alpha { list-style: lower-alpha outside; }
   }
 }
 
-/*============================================================================
-  #Tables
-==============================================================================*/
+//============================================================================
+//  #Tables
+//============================================================================
 table {
   width: 100%;
   border-collapse: collapse;
@@ -1406,10 +1429,10 @@ th, td {
 }
 
 
-/*============================================================================
-  #OOCSS Media Object
-    - http://www.stubbornella.org/content/2010/06/25/the-media-object-saves-hundreds-of-lines-of-code/
-==============================================================================*/
+//============================================================================
+//  #OOCSS Media Object
+//    - http://www.stubbornella.org/content/2010/06/25/the-media-object-saves-hundreds-of-lines-of-code/
+//============================================================================
 .media,
 .media-flex {
   overflow: hidden;
@@ -1433,20 +1456,19 @@ th, td {
 }
 
 
-/*============================================================================
-  #Images and Iframes
-==============================================================================*/
+//============================================================================
+//  #Images and Iframes
+//============================================================================
 img {
   border: 0 none;
+  max-width: 100%;
 }
 
 svg:not(:root) {
   overflow: hidden;
 }
 
-img.auto,
-.grid__item img,
-.grid__item iframe {
+img.auto {
   max-width: 100%;
 }
 
@@ -1467,9 +1489,9 @@ img.auto,
   }
 }
 
-/*============================================================================
-  #Forms
-==============================================================================*/
+//============================================================================
+//  #Forms
+//============================================================================
 form {
   margin-bottom: 0;
 }
@@ -1478,7 +1500,7 @@ form {
   margin-bottom: $gutter / 2;
 }
 
-/*================ Prevent zoom on touch devices in active inputs ================*/
+//================ Prevent zoom on touch devices in active inputs ================
 @include media-breakpoint-up(md) {
   input,
   textarea {
@@ -1563,7 +1585,7 @@ textarea {
   min-height: rem(100px);
 }
 
-/*================ Input element overrides ================*/
+//================ Input element overrides ================
 input[type="checkbox"],
 input[type="radio"] {
   display: inline;
@@ -1603,7 +1625,7 @@ select {
   text-overflow: '';
   cursor: pointer;
 
-  /*================ Hide the svg arrow in IE9 and below ================*/
+  //================ Hide the svg arrow in IE9 and below ================
   .ie9 &,
   .lt-ie9 & {
     padding-right: 10px;
@@ -1625,7 +1647,7 @@ select::-ms-expand {
   display: none;
 }
 
-/*================ Form labels ================*/
+//================ Form labels ================
 .hidden-label {
   position: absolute;
   height: 0;
@@ -1648,7 +1670,7 @@ label[for] {
   cursor: pointer;
 }
 
-/*================ Horizontal Form ================*/
+//================ Horizontal Form ================
 .form-vertical {
   input,
   select,
@@ -1663,7 +1685,7 @@ label[for] {
   }
 }
 
-/*================ Error styles ================*/
+//================ Error styles ================
 input,
 select,
 textarea {
@@ -1679,7 +1701,7 @@ label.error {
 }
 
 
-/*================ Input Group ================*/
+//================ Input Group ================
 .input-group {
   @include flexbox;
   position: relative;
@@ -1728,14 +1750,14 @@ label.error {
   white-space: nowrap;
 }
 
-/*============================================================================
-  #Pagination
-==============================================================================*/
+//============================================================================
+//  #Pagination
+//============================================================================
 .pagination {
   margin-bottom: 1rem;
 }
 
-/*================ Custom Pagination ================*/
+//================ Custom Pagination ================
 .pagination-custom {
   display: inline-block;
   padding-left: 0;
@@ -1833,9 +1855,9 @@ label.error {
 }
 
 
-/*============================================================================
-  #Site Header
-==============================================================================*/
+//============================================================================
+//  #Site Header
+//============================================================================
 .site-header {
   @include vfixelement(top);
   z-index: 100; //Above everything
@@ -1856,10 +1878,10 @@ label.error {
 }
 
 .site-branding {
-  @include flex(0);
+  @include flex(0 rem(69px));
 
   @include media-breakpoint-up(md) {
-
+    @include flex(0 rem(103px));
   }
 
   a,
@@ -1875,7 +1897,7 @@ label.error {
   a {
     padding: rem(10px) 0;
     @include media-breakpoint-up(md) {
-      padding: rem(5px);
+      padding: rem(5px) 0;
     }
   }
 
@@ -1892,7 +1914,7 @@ label.error {
   }
 }
 
-/*================ Header Toggles ================*/
+//================ Header Toggles ================
 .menu-toggle {
   @include media-breakpoint-up(lg) {
     display: none;
@@ -1940,7 +1962,7 @@ label.error {
   }
 }
 
-/*================ Header Search ================*/
+//================ Header Search ================
 .header-search {
   max-width: rem(220px);
   margin-left: auto;
@@ -1981,9 +2003,9 @@ label.error {
   }
 }
 
-/*============================================================================
-  #Site Nav and Dropdowns
-==============================================================================*/
+//============================================================================
+//  #Site Nav and Dropdowns
+//============================================================================
 .nav-bar {
   display: none;
 
@@ -2035,7 +2057,7 @@ label.error {
   }
 }
 
-/*================ Dropdowns ================*/
+//================ Dropdowns ================
 .dropdown {
   display: none;
   position: absolute;
@@ -2061,10 +2083,10 @@ label.error {
   }
 }
 
-/*============================================================================
-  #Mobile Nav
-  - List of items inside the mobile drawer
-==============================================================================*/
+//============================================================================
+//  #Mobile Nav
+//  - List of items inside the mobile drawer
+//============================================================================
 .mobile-nav {
   // Negative of .drawer left/right padding for full-width link tap area
   margin: (-$gutter / 2) (-$gutter / 2) 0 (-$gutter / 2);
@@ -2189,9 +2211,9 @@ label.error {
   }
 }
 
-/*============================================================================
-  #Drawers
-==============================================================================*/
+//============================================================================
+//  #Drawers
+//============================================================================
 .js-drawer-open {
   overflow: hidden;
 }
@@ -2313,14 +2335,14 @@ label.error {
   }
 }
 
-/*============================================================================
-  #Main Content
-==============================================================================*/
+//============================================================================
+//  #Main Content
+//============================================================================
 
 .main-content {
   @include make-container();
   background-color: $colorBody;
-  padding: rem(40px) 0;
+  padding: rem(50px) 0; // 40px header + 10px spacing
 
   .template-index & {
     padding-top: 0;
@@ -2328,16 +2350,16 @@ label.error {
 
   @include media-breakpoint-up(md) {
     margin-bottom: $footerHeight;
-    padding: rem(60px) 0;
+    padding: rem(80px) 0; // 60px header + 20px spacing
   }
   // Put in front of footer and behind header
   position: relative;
   z-index: 5;
 }
 
-/*============================================================================
-  #Site Footer
-==============================================================================*/
+//============================================================================
+//  #Site Footer
+//============================================================================
 .site-footer {
   background-color: $colorFooterBg;
   padding: $gutter 0;
@@ -2478,9 +2500,9 @@ label.error {
   }
 }
 
-/*============================================================================
-  #Product and Collection Grids
-==============================================================================*/
+//============================================================================
+//  #Product and Collection Grids
+//============================================================================
 .grid__image {
   display: block;
   margin: 0 auto ($gutter / 2);
@@ -2491,35 +2513,52 @@ label.error {
   }
 }
 
-/*============================================================================
-  #Collection Filters
-==============================================================================*/
+.collection-container {
+  @include make-container;
+  @include make-container-max-widths();
+  @include make-row();
+}
+
+.collection-main {
+  @include make-col();
+  @include make-col-span(12)
+}
+
+// @todo add sidebar
+
+.product-grid {
+  @include make-subrow();
+}
+
+//============================================================================
+//  #Collection Filters
+//============================================================================
 .filter--active {
   font-weight: bold;
 }
 
-/*============================================================================
-  #Breadcrumbs
-==============================================================================
-.breadcrumb {
-  margin-bottom: $gutter;
+//=============================================================================
+// #Breadcrumbs
+//=============================================================================
+//breadcrumb {
+// margin-bottom: $gutter;
 
-  a,
-  span {
-    display: inline-block;
-    padding: 0 rem(7px) 0 0;
-    margin-right: rem(7px);
+// a,
+// span {
+//   display: inline-block;
+//   padding: 0 rem(7px) 0 0;
+//   margin-right: rem(7px);
 
-    &:first-child {
-      padding-left: 0;
-    }
-  }
-}
-*/
+//   &:first-child {
+//     padding-left: 0;
+//   }
+// }
+//
+//
 
-/*============================================================================
-  #Product Page
-==============================================================================*/
+//============================================================================
+//  #Product Page
+//============================================================================
 .product-single__variants {
   display: none;
 
@@ -2547,22 +2586,59 @@ label.error {
 .container {
   @include make-container;
   @include make-container-max-widths();
-  @include flexbox;
-  @include flex-flow(row wrap);
+  @include make-row();
 }
 
-.gallery {
+.image-gallery {
+  @include make-col();
   @include flex(1 100%);
+  @include make-subrow();
+  @include media-breakpoint-up(md) {
+    @include make-col-span(6);
+  }
+  @include media-breakpoint-up(xl) {
+    @include make-col-span(7);
+  }
+
+  .main-image {
+    @include make-col();
+    img {
+      display: block;
+    }
+
+    @include media-breakpoint-up(xl) {
+      @include make-col-span(6,7);
+      @include order(2)
+    }
+
+  }
+  .thumbnails {
+    margin: 0;
+    @include make-col();
+    list-style: none;
+
+    @include media-breakpoint-up(xl) {
+      @include make-col-span(1,7);
+      @include order(1)
+    }
+  }
 }
 
 .product-details {
+  @include make-col();
   @include flex(1 100%);
+  @include media-breakpoint-up(md) {
+    @include make-col-span(6);
+  }
+  @include media-breakpoint-up(xl) {
+    @include make-col-span(5);
+  }
 }
 
 
-/*============================================================================
-  #Notes and Form Feedback
-==============================================================================*/
+//============================================================================
+//  #Notes and Form Feedback
+//============================================================================
 .note,
 .errors {
   border-radius: $radius;
@@ -2630,9 +2706,9 @@ label.error {
 }
 
 
-/*============================================================================
-  #Cart Page
-==============================================================================*/
+//============================================================================
+//  #Cart Page
+//============================================================================
 .cart__row {
   position: relative;
   margin-top: $gutter;
@@ -2706,9 +2782,9 @@ label.error {
   }
 }
 
-/*============================================================================
-  #Ajax Cart Styles (conditionally loaded)
-==============================================================================*/
+//============================================================================
+//  #Ajax Cart Styles (conditionally loaded)
+//============================================================================
 {% if settings.ajax_cart_enable %}
 
 .ajaxcart__inner {
@@ -2765,7 +2841,7 @@ label.error {
   padding-top: $gutter / 5;
 }
 
-/*================ Quantity Selectors ================*/
+//================ Quantity Selectors ================
 .js-qty {
   position: relative;
   margin-bottom: 1rem;
@@ -2812,7 +2888,7 @@ label.error {
   border-right: rem(1px) solid $colorBorder;
 }
 
-/*================ Quantity Selectors in Ajax Cart ================*/
+//================ Quantity Selectors in Ajax Cart ================
 .ajaxcart__qty {
   @extend .js-qty;
   margin: 0;

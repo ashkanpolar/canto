@@ -1,12 +1,12 @@
-<!-- /templates/collection.liquid -->
+{% comment %}
+/templates/collection.liquid
+{% endcomment %}
+
 
 {% paginate collection.products by 12 %}
 
-{% comment %}
-  Use .grid--rev so that the collection tags appear below the products on mobile
-{% endcomment %}
-<div class="grid--rev">
-  <div class="grid__item large--three-quarters">
+<div class="collection-container{% if settings.collection_sidebar_links_enable %} has-sidebar{% endif %}">
+  <div class="collection-main">
 
     {% comment %}
       Different markup if a collection description exists
@@ -22,7 +22,7 @@
       <div class="section-header">
         <div class="section-header__right">
           {% include 'collection-sorting' %}
-          {% include 'collection-views' %}
+          {% comment %}{% include 'collection-views' %}{% endcomment %}
         </div>
       </div>
     {% else %}
@@ -30,7 +30,7 @@
         <h1 class="section-header__title section-header__left">{{ collection.name }}</h1>
         <div class="section-header__right">
           {% include 'collection-sorting' %}
-          {% include 'collection-views' %}
+            {% comment %}{% include 'collection-views' %}{% endcomment %}
         </div>
       </header>
     {% endif %}
@@ -39,7 +39,7 @@
       Use class grid-uniform to have evenly sized columns clear
       each other properly at each breakpoint.
     {% endcomment %}
-    <div class="grid-uniform">
+    <div class="product-grid">
 
       {% comment %}
         Loop through our products in the current collection.
@@ -58,7 +58,7 @@
           {% comment %}
             If collection exists but is empty, display message
           {% endcomment %}
-          <div class="grid__item">
+          <div class="no-products">
             <p>{{ 'collections.general.no_matches' | t }}</p>
           </div>
 
@@ -78,9 +78,11 @@
 
   </div>
 
-  <div class="grid__item large--one-quarter">
+  {% if settings.collection_sidebar_links_enable %}
+  <div class="collection-sidebar">
     {% include 'collection-sidebar' %}
   </div>
+  {% endif %}
 </div>
 
 {% endpaginate %}
