@@ -2320,15 +2320,15 @@ label.error {
 .main-content {
   @include make-container();
   background-color: $colorBody;
-  margin-top: rem(40px);
+  padding: rem(40px) 0;
 
   .template-index & {
-    margin-top: 0;
+    padding-top: 0;
   }
 
   @include media-breakpoint-up(md) {
     margin-bottom: $footerHeight;
-    margin-top: rem(60px);
+    padding: rem(60px) 0;
   }
   // Put in front of footer and behind header
   position: relative;
@@ -2542,6 +2542,21 @@ label.error {
   li {
     margin-bottom: $gutter;
   }
+}
+
+.container {
+  @include make-container;
+  @include make-container-max-widths();
+  @include flexbox;
+  @include flex-flow(row wrap);
+}
+
+.gallery {
+  @include flex(1 100%);
+}
+
+.product-details {
+  @include flex(1 100%);
 }
 
 
