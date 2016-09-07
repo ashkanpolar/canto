@@ -56,7 +56,9 @@ $grid-breakpoints: (
     // Large screen / desktop
         lg: rem(992px),
     // Extra large screen / wide desktop
-        xl: rem(1200px)
+        xl: rem(1200px),
+    // Extra Extra Large / ultra-wide
+        xxl: rem(1600px)
 ) !default;
 
 
@@ -68,7 +70,8 @@ $container-max-widths: (
         //sm: 100%,
         //md: 100%,
         //lg: 100%,
-        xl: rem(1200px)
+        //xl: rem(1200px),
+        xxl: rem(1600px)
 ) !default;
 
 
@@ -118,7 +121,7 @@ $colorNavText: {{ settings.color_navigation_text }};
 // Site Footer
 $colorFooterBg: {{ settings.color_footer_bg }};
 $colorFooterText: {{ settings.color_footer_text }};
-$footerHeight: 544px; //include margin
+$footerHeight: rem(584px); //include margin
 
 // Helper colors
 $disabledGrey: #f6f6f6;
@@ -778,6 +781,7 @@ $socialIconFontStack: 'icons';
   }
 }
 
+// To place directly inside columns for subgrids
 @mixin make-subrow($gutter: $grid-gutter-width) {
   @include flexbox;
   @include flex-flow(row wrap);
@@ -1003,8 +1007,8 @@ h1, h2, h3, h4, h5, h6 {
   display: block;
   font-family: $headerFontStack;
   font-weight: $headerFontWeight;
-  margin: 0 0 0.5rem;
-  line-height: 1.4;
+  margin: 0 0 1.25rem;
+  line-height: 1.25;
 
   a {
     text-decoration: none;
@@ -1014,19 +1018,28 @@ h1, h2, h3, h4, h5, h6 {
 
 //================ Use rem() Sass function to declare font-size ================
 h1 {
-  font-size: rem(36px);
+  font-size: rem(24px);
+  @include media-breakpoint-up(md){
+    font-size: rem(30px);
+  }
 }
 
 h2 {
-  font-size: rem(28px);
+  font-size: rem(22px);
+  @include media-breakpoint-up(md){
+    font-size: rem(26px);
+  }
 }
 
 h3 {
-  font-size: rem(22px);
+  font-size: rem(20px);
+  @include media-breakpoint-up(md){
+    font-size: rem(22px);
+  }
 }
 
 h4 {
-  font-size: rem(20px);
+  font-size: rem(18px);
 }
 
 h5 {
@@ -1141,52 +1154,10 @@ hr {
 //================ Section Headers ================
 .section-header {
   margin-bottom: $gutter / 1.5;
-}
-
-@include media-breakpoint-up (lg) {
-  .section-header {
-    width: 100%;
-  }
-
-  .section-header__title {
-    margin-bottom: $gutter / 2.5;
-  }
-
-  .section-header__left {
-    display: table-cell;
-    vertical-align: middle;
-    margin-bottom: 0;
-
-    h1, h2, h3, h4,
-    .h1, .h2, .h3, .h4 {
-      margin-bottom: 0;
-    }
-  }
-
-  .section-header__right {
-    display: table-cell;
-    vertical-align: middle;
-    text-align: right;
-    width: rem(335px);
-
-    @include media-breakpoint-up (md) {
-      margin-bottom: $gutter;
-    }
-  }
-}
-
-.section-header__right {
-  .form-horizontal,
-  .collection-view {
-    display: inline-block;
-    vertical-align: middle;
-  }
-
-  @include media-breakpoint-up (sm) {
-    label + select,
-    .collection-view {
-      margin-left: $gutter / 2;
-    }
+  padding: 0 rem(10px);
+  text-align: center;
+  @include media-breakpoint-up(md) {
+    padding: 0;
   }
 }
 
@@ -1878,10 +1849,10 @@ label.error {
 }
 
 .site-branding {
-  @include flex(0 rem(69px));
+  @include flex(0 0 rem(69px));
 
   @include media-breakpoint-up(md) {
-    @include flex(0 rem(103px));
+    @include flex(0 0 rem(103px));
   }
 
   a,
@@ -2074,6 +2045,7 @@ label.error {
 
   a {
     background-color: $colorNav;
+    padding: rem(5px);
 
     &:hover,
     &:active,
@@ -2342,15 +2314,19 @@ label.error {
 .main-content {
   @include make-container();
   background-color: $colorBody;
-  padding: rem(50px) 0; // 40px header + 10px spacing
+  padding: rem(40px) 0; // 40px header
 
   .template-index & {
     padding-top: 0;
   }
 
   @include media-breakpoint-up(md) {
+    padding-top: rem(70px); // 60px header + 10px spacing
+  }
+  @include media-breakpoint-up(lg) {
+    min-height: 100%;
     margin-bottom: $footerHeight;
-    padding: rem(80px) 0; // 60px header + 20px spacing
+    padding-top: rem(90px); // 60px header + 10px spacing
   }
   // Put in front of footer and behind header
   position: relative;
@@ -2367,9 +2343,6 @@ label.error {
 
   @include media-breakpoint-up (lg) {
     padding: rem(60px) 0;
-  }
-
-  @include media-breakpoint-up(md) {
     @include vfixelement(bottom);
     z-index: 1; //Behind main content
   }
@@ -2528,6 +2501,52 @@ label.error {
 
 .product-grid {
   @include make-subrow();
+}
+
+.product-card {
+  @include make-col();
+  @include make-col-span(6);
+
+  @include flexbox;
+  @include flex-flow(row wrap);
+
+  margin-bottom: ($gutter / 2);
+
+  @include media-breakpoint-up(sm) {
+    @include make-col-span(4);
+  }
+
+  @include media-breakpoint-up(md) {
+    @include make-col-span(3);
+  }
+
+  .card-image {
+    @include flex(0 0 100%);
+    img{
+      display: block;
+      margin: auto;
+    }
+  }
+  .card-text {
+    @include flex(0 0 100%);
+    @include align-self(flex-end);
+    text-align: center;
+    padding: rem(10px);
+
+    .product-title {
+      margin: 0 0 rem(12px);
+      font-size: rem(16px);
+      @include media-breakpoint-up(lg) {
+        font-size: rem(20px);
+        margin: rem(12px) 0;
+      }
+    }
+    .price {
+      font-weight: bold;
+      margin: rem(12px) 0;
+      font-size: rem(18px);
+    }
+  }
 }
 
 //============================================================================
