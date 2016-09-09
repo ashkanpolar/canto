@@ -7,8 +7,12 @@
 {% if cart.item_count > 0 %}
 
   <form action="{{ urls.cart_update }}" method="post" novalidate class="cart">
-
-    <h1>{{ 'cart.general.title' | t }}</h1>
+    <div class="section-header">
+      <h1>Shopping Bag</h1>
+      {% comment %}
+      {{ 'cart.general.title' | t }}
+      {% endcomment %}
+    </div>
 
     <div class="cart__row medium-down--hide cart__header-labels">
       <div class="grid--full">

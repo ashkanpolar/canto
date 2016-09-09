@@ -7,50 +7,51 @@
   <meta itemprop="url" content="{{ store.url }}{{ product.url }}">
   <meta itemprop="image" content="{{ product.main_image.src | img_url: 'large' }}">
 
-  <div class="container gallery mode-zoom" >
-    <div class="image-gallery">
-      <div class="main-image" id="ProductPhoto">
-        {% if product.images.size == 0 %}
-          {{ 'no-image.png' | asset_url | img_tag }}
-        {% else %}
-          {% assign main_image = product.main_image %}
-          <img src="{{ main_image | img_url: 'master' }}" id="ProductPhotoImg">
+  <div class="container mode-zoom" >
+    <div class="product-image">
+      <div class="image-gallery{% if product.images.size > 1 %} has-thumbnails{% endif %}">
+        <div class="main-image" id="ProductPhoto">
+          {% if product.images.size == 0 %}
+            {{ 'no-image.png' | asset_url | img_tag }}
+          {% else %}
+            {% assign main_image = product.main_image %}
+            <img src="{{ main_image | img_url: 'master' }}" id="ProductPhotoImg">
+          {% endif %}
+        </div>
+        {% comment %}
+          Create thumbnails if we have more than one product image
+        {% endcomment %}
+        {% if product.images.size > 1 %}
+          <ul class="thumbnails" id="ProductThumbs">
+
+            {% for image in product.images %}
+              <li>
+                <a class="thumb" title="{{ product.name | escape }}" href="{{ image | product_img_url: 'original' }}">
+                  <img src="{{ image.src | img_url: 'medium' }}" alt="{{ product.name | escape }}">
+                </a>
+              </li>
+            {% endfor %}
+
+          </ul>
         {% endif %}
       </div>
-
       {% comment %}
-        Create thumbnails if we have more than one product image
+          Load thumbnail into main Img
       {% endcomment %}
-      {% if product.images.size > 1 %}
-        <ul class="thumbnails" id="ProductThumbs">
-
-          {% for image in product.images %}
-            <li class="grid__item one-quarter thumbs">
-              <a class="thumb" title="{{ product.name | escape }}" href="{{ image | product_img_url: 'original' }}">
-                <img src="{{ image.src | img_url: 'medium' }}" alt="{{ product.name | escape }}">
-              </a>
-            </li>
-          {% endfor %}
-
-        </ul>
-      {% endif %}
+      <script>
+      $(".thumbs a").click(function(evt) {
+          evt.preventDefault();
+          $("#ProductPhoto").empty().append(
+              $("<img>", { src: this.href})
+          );
+      });
+      </script>
     </div>
 
-    {% comment %}
-        Load thumbnail into main Img
-    {% endcomment %}
-    <script>
-    $(".thumbs a").click(function(evt) {
-        evt.preventDefault();
-        $("#ProductPhoto").empty().append(
-            $("<img>", { src: this.href})
-        );
-    });
-    </script>
-
-
     <div class="product-details">
-      <h1 itemprop="name">{{ product.name }}</h1>
+      <div class="section-header">
+        <h1 itemprop="name">{{ product.name }}</h1>
+      </div>
       <div itemprop="offers" itemscope itemtype="http://schema.org/Offer">
         <meta itemprop="priceCurrency" content="{{ store.currency }}">
         <link itemprop="availability" href="http://schema.org/{% if product.available %}InStock{% else %}OutOfStock{% endif %}">

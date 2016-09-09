@@ -3,23 +3,21 @@
 Contact us page
 {% endcomment %}
 
-<div class="grid">
-
-  <div class="grid__item large--two-thirds push--large--one-sixth">
-
+<div class="page-container">
+  <div class="section-header">
     <h1>{{ 'contact.general.title' | t }}</h1>
+  </div>
+  {% comment %}
+  Regular page content goes here.
+  {% endcomment %}
+  {% if settings.contact_details != blank %}
+  <div class="rte">
+      <p>
+        {{ settings.contact_details }}
+      </p>
 
-    {% comment %}
-    Regular page content goes here.
-    {% endcomment %}
-    <div class="rte">
-      {% if settings.contact_details != blank %}
-        <p>
-          {{ settings.contact_details }}
-        </p>
-      {% endif %}
-    </div>
-
+  </div>
+  {% endif %}
     {% comment %}
     Contact form starts here
     {% endcomment %}
@@ -63,6 +61,4 @@ Contact us page
 
       {% endform %}
     </div>
-
-  </div>
 </div>

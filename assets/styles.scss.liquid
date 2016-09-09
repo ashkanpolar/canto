@@ -47,17 +47,17 @@ $baseFontSize: 16px; // Henceforth known as 1em/rem
 // adapting to different screen sizes, for use in media queries.
 
 $grid-breakpoints: (
-    // Extra small screen / phone
+  // Extra small screen / phone
         xs: rem(0),
-    // Small screen / phone
+  // Small screen / phone
         sm: rem(544px),
-    // Medium screen / tablet
+  // Medium screen / tablet
         md: rem(768px),
-    // Large screen / desktop
+  // Large screen / desktop
         lg: rem(992px),
-    // Extra large screen / wide desktop
+  // Extra large screen / wide desktop
         xl: rem(1200px),
-    // Extra Extra Large / ultra-wide
+  // Extra Extra Large / ultra-wide
         xxl: rem(1600px)
 ) !default;
 
@@ -67,10 +67,10 @@ $grid-breakpoints: (
 // Define the maximum width of `.container` for different screen sizes.
 
 $container-max-widths: (
-        //sm: 100%,
-        //md: 100%,
-        //lg: 100%,
-        //xl: rem(1200px),
+  //sm: 100%,
+  //md: 100%,
+  //lg: 100%,
+  //xl: rem(1200px),
         xxl: rem(1600px)
 ) !default;
 
@@ -80,7 +80,7 @@ $container-max-widths: (
 // Set the number of columns and specify the width of the gutters.
 
 $grid-columns: 12 !default;
-$grid-gutter-width: 40px; //rem(40px);
+$grid-gutter-width: rem(40px); //40px;
 
 //============================================================================
 //  #General Variables
@@ -160,9 +160,9 @@ $bodyFontStack: 'Quicksand', 'HelveticaNeue', 'Helvetica Neue', Helvetica, Arial
   font-family: 'icons';
   src: url('{{ "icons.eot" | asset_url }}');
   src: url('{{ "icons.eot" | asset_url }}#iefix') format("embedded-opentype"),
-       url('{{ "icons.woff" | asset_url }}') format("woff"),
-       url('{{ "icons.ttf" | asset_url }}') format("truetype"),
-       url('{{ "icons.svg" | asset_url }}#timber-icons') format("svg");
+  url('{{ "icons.woff" | asset_url }}') format("woff"),
+  url('{{ "icons.ttf" | asset_url }}') format("truetype"),
+  url('{{ "icons.svg" | asset_url }}#timber-icons') format("svg");
   font-weight: normal;
   font-style: normal;
 }
@@ -535,6 +535,12 @@ $socialIconFontStack: 'icons';
   -moz-flex: $fg $fs $fb;
   -ms-flex: $fg $fs $fb;
   flex: $fg $fs $fb;
+  @if $fb {
+    max-width: $fb;
+  }
+  @else {
+    max-width: 100%;
+  }
 }
 
 //----------------------------------------------------------------------
@@ -809,7 +815,7 @@ $socialIconFontStack: 'icons';
 }
 
 @mixin make-col-span($size, $columns: $grid-columns) {
-  @include flex(0, 0, percentage($size / $columns));
+  @include flex(0,0,percentage($size / $columns));
 }
 
 @mixin make-col-offset($size, $columns: $grid-columns) {
@@ -1162,10 +1168,6 @@ hr {
     @include flexbox;
     @include flex-flow();
 
-    h1 {
-      @include flex(1);
-    }
-
     .view-options {
       margin-left: auto;
 
@@ -1181,9 +1183,13 @@ hr {
     margin-bottom: rem(40px);
   }
 
-  h1 {
+  h1,
+  h2 {
     text-transform: uppercase;
     margin: 0;
+    @include media-breakpoint-up(sm) {
+      @include flex(1);
+    }
   }
 }
 
@@ -1311,8 +1317,8 @@ html input[disabled] {
 
   &:active,
   &:focus {
-   background-color: $colorBtnPrimaryActive;
-   color: $colorBtnPrimaryText;
+    background-color: $colorBtnPrimaryActive;
+    color: $colorBtnPrimaryText;
   }
 
   &[disabled],
@@ -1336,8 +1342,8 @@ html input[disabled] {
 
   &:active,
   &:focus {
-   background-color: $colorBtnSecondaryActive;
-   color: $colorBtnSecondaryText;
+    background-color: $colorBtnSecondaryActive;
+    color: $colorBtnSecondaryText;
   }
 }
 
@@ -1608,8 +1614,8 @@ input[type="image"] {
 
 select {
   -webkit-appearance: none;
-     -moz-appearance: none;
-          appearance: none;
+  -moz-appearance: none;
+  appearance: none;
   background-position: right center;
   background: {
     image: url('{{ "ico-select.svg" | asset_url }}');
@@ -1713,7 +1719,7 @@ label.error {
 
   .input-group-field:last-child,
   .input-group-btn:last-child > .btn {
-   border-radius: 0 $radius $radius 0;
+    border-radius: 0 $radius $radius 0;
   }
 
   input {
@@ -1875,10 +1881,10 @@ label.error {
 }
 
 .site-branding {
-  @include flex(0 0 rem(69px));
+  @include flex(0,0,rem(69px));
 
   @include media-breakpoint-up(md) {
-    @include flex(0 0 rem(103px));
+    @include flex(0,0,rem(103px));
   }
 
   a,
@@ -2014,8 +2020,7 @@ label.error {
 .site-nav {
   font-size: 1rem;
   cursor: default;
-  margin: 0 0 0 rem(10px);
-  padding: rem(18px) 0 rem(2px);
+  padding: rem(2px) 0;
 
   li {
     margin: 0;
@@ -2045,7 +2050,10 @@ label.error {
   > li {
     position: relative;
     display: inline-block;
-    margin-left: rem(30px);
+    padding: rem(16px) rem(20px) 0;
+    &.has-dropdown:hover {
+      background-color: $colorNav;
+    }
 
     > a {
       text-transform: uppercase;
@@ -2062,6 +2070,9 @@ label.error {
   margin: 0;
   z-index: $zindexNavDropdowns;
   min-width: 100%;
+  text-align: center;
+  padding: rem(10px) rem(5px);
+  background-color: $colorNav;
 
   .supports-no-touch .has-dropdown:hover &,
   .has-dropdown.nav-hover &,
@@ -2070,14 +2081,7 @@ label.error {
   }
 
   a {
-    background-color: $colorNav;
     padding: rem(5px);
-
-    &:hover,
-    &:active,
-    &:focus {
-      background-color: darken($colorNav, 10%);
-    }
   }
 }
 
@@ -2417,10 +2421,10 @@ label.error {
 
 .collection-links,
 .secondary-links {
-  @include flex(1 100%);
+  @include flex(1,1,100%);
 
   @include media-breakpoint-up(sm) {
-    @include flex(1 50%);
+    @include flex(1,1,50%);
   }
 
   @include media-breakpoint-up(md) {
@@ -2453,7 +2457,7 @@ label.error {
 
 .social-links {
   margin-top: rem(20px);
-  @include flex(1 100%);
+  @include flex(1,1,100%);
 
   @include media-breakpoint-up(md) {
     @include flex(1);
@@ -2500,17 +2504,63 @@ label.error {
 }
 
 //============================================================================
-//  #Product and Collection Grids
+//  #Home Page
 //============================================================================
-.grid__image {
-  display: block;
-  margin: 0 auto ($gutter / 2);
+.main-banner,
+.secondary-banners{
+  @include media-breakpoint-up(md) {
+    margin-bottom: rem(20px);
+  }
+  @include media-breakpoint-up(lg) {
+    margin-bottom: rem(40px);
+  }
 
-  img {
+  a, img {
     display: block;
-    margin: 0 auto;
   }
 }
+
+.secondary-banners {
+  @include make-container;
+  @include make-container-max-widths();
+  @include make-row();
+
+  div {
+    @include make-col();
+    @include media-breakpoint-up(md) {
+      @include make-col-span(6);
+    }
+  }
+}
+.home-collection {
+  @include make-container;
+  @include make-container-max-widths();
+  @include make-row();
+  margin-top: rem(20px);
+
+  @include media-breakpoint-up(lg) {
+    margin-top: rem(40px);
+  }
+}
+
+//============================================================================
+//  #Content Page
+//============================================================================
+.page-container {
+  @include make-container;
+  @include make-container-max-widths((xs: rem(640px), lg: rem(660px)));
+  padding: 0 rem(10px);
+
+  @include media-breakpoint-up(md) {
+    padding: 0 rem(20px);
+  }
+
+}
+
+
+//============================================================================
+//  #Product and Collection Grids
+//============================================================================
 
 .collection-container {
   @include make-container;
@@ -2527,6 +2577,20 @@ label.error {
 
 .product-grid {
   @include make-subrow();
+}
+
+.product-grid-scrollable {
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  max-width: 100%;
+  @include media-breakpoint-up(md){
+    overflow: visible;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .product-grid {
+    @include flex-flow();
+  }
 }
 
 .product-card {
@@ -2547,14 +2611,14 @@ label.error {
   }
 
   .card-image {
-    @include flex(0 0 100%);
+    @include flex(0,0,100%);
     img{
       display: block;
       margin: auto;
     }
   }
   .card-text {
-    @include flex(0 0 100%);
+    @include flex(0,0,100%);
     @include align-self(flex-end);
     text-align: center;
     padding: rem(10px);
@@ -2634,44 +2698,49 @@ label.error {
   @include make-row();
 }
 
-.image-gallery {
+.product-image {
   @include make-col();
-  @include flex(1 100%);
-  @include make-subrow();
+  @include flex(1,1,100%);
   @include media-breakpoint-up(md) {
     @include make-col-span(6);
   }
   @include media-breakpoint-up(xl) {
     @include make-col-span(7);
   }
+}
+
+.image-gallery {
+  @include make-subrow();
 
   .main-image {
     @include make-col();
     img {
       display: block;
     }
-
-    @include media-breakpoint-up(xl) {
-      @include make-col-span(6,7);
-      @include order(2)
-    }
-
   }
   .thumbnails {
     margin: 0;
     @include make-col();
     list-style: none;
+  }
 
+  &.has-thumbnails {
     @include media-breakpoint-up(xl) {
-      @include make-col-span(1,7);
-      @include order(1)
+      .main-image {
+        @include make-col-span(6,7);
+        @include order(2)
+      }
+      .thumbnails {
+        @include make-col-span(1,7);
+        @include order(1)
+      }
     }
   }
 }
 
 .product-details {
   @include make-col();
-  @include flex(1 100%);
+  @include flex(1,1,100%);
   @include media-breakpoint-up(md) {
     @include make-col-span(6);
   }
@@ -2754,6 +2823,8 @@ label.error {
 //============================================================================
 //  #Cart Page
 //============================================================================
+
+
 .cart__row {
   position: relative;
   margin-top: $gutter;
@@ -2827,10 +2898,10 @@ label.error {
   }
 }
 
+{% if settings.ajax_cart_enable %}
 //============================================================================
 //  #Ajax Cart Styles (conditionally loaded)
 //============================================================================
-{% if settings.ajax_cart_enable %}
 
 .ajaxcart__inner {
   margin-bottom: $gutter;
