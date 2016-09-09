@@ -27,22 +27,22 @@
   },
   "cart": {
     "general": {
-      "title": "Shopping Cart",
+      "title": "Shopping Bag",
       "remove": "Remove",
       "note": "Special instructions for seller",
       "subtotal": "Subtotal",
       "shipping_at_checkout": "Shipping & taxes calculated at checkout",
-      "update": "Update Cart",
+      "update": "Update Bag",
       "checkout": "Check Out",
-      "empty": "Your cart is currently empty.",
+      "empty": "Your bag is empty.",
       "continue_browsing_html": "Continue browsing <a href=\"\/\">here<\/a>.",
-      "view_cart": "View Cart",
-      "close_cart": "Close Cart"
+      "view_cart": "View Bag",
+      "close_cart": "Close Bag"
     },
     "label": {
       "product": "Product",
       "price": "Price",
-      "quantity": "Quantity",
+      "quantity": "Qty",
       "total": "Total",
       "add_note": "Add a note to your order"
     }
@@ -121,8 +121,8 @@
   },
   "home_page": {
     "sections": {
-      "frontpage_title": "Frontpage Collection",
-      "featured_title": "Featured Collections",
+      "frontpage_title": "New Items",
+      "featured_title": "Featured Items",
       "news_title": "Latest News"
     },
     "onboarding": {
@@ -140,11 +140,11 @@
       "menu": "Menu"
     },
     "drawers": {
-      "browse": "Browse",
+      "browse": "Menu",
       "close_menu": "Close menu"
     },
     "cart": {
-      "title": "Cart",
+      "title": "Shopping Bag",
       "items_count": {
         "one": "item",
         "other": "items"
@@ -159,8 +159,8 @@
     },
     "footer": {
       "linklist_title": "Quick Links",
-      "social_title": "Get Connected",
-      "newsletter_title": "Newsletter",
+      "social_title": "Follow us",
+      "newsletter_title": "Join our mailing list",
       "accepted_payments": "Accepted Payments"
     }
   },
@@ -173,10 +173,10 @@
     "product": {
       "sold_out": "Sold Out",
       "on_sale_from_html": "<strong>On Sale<\/strong> from {{ price }}",
-      "unavailable": "Unavailable",
+      "unavailable": "Not available",
       "base": "On sale from",
-      "quantity": "Quantity",
-      "add_to_cart": "Add to Cart"
+      "quantity": "Qty.",
+      "add_to_cart": "Buy Now"
     }
   }
 }

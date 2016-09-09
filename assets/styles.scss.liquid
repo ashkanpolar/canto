@@ -1290,7 +1290,7 @@ html input[disabled] {
 .button,
 .rte .button {
   display: inline-block;
-  padding: rem(9px) rem(10px);
+  padding: rem(10px);
   width: auto;
   margin: 0;
   font-weight: bold;
@@ -1299,12 +1299,12 @@ html input[disabled] {
   vertical-align: middle;
   white-space: nowrap;
   cursor: pointer;
-  border: 1px solid transparent;
   text-transform: uppercase;
   @include prefix('user-select', 'none');
   -webkit-appearance: none;
   -moz-appearance: none;
   border-radius: $radius;
+  border: none;
 
   //================ Set primary button colors - can override later ================
   background-color: $colorBtnPrimary;
@@ -1348,12 +1348,12 @@ html input[disabled] {
 }
 
 .button.small {
-  padding: rem(4px) rem(5px);
+  padding: rem(5px);
   font-size: rem(12px);
 }
 
 .button.large {
-  padding: rem(12px) rem(15px);
+  padding: rem(15px);
   font-size: em(16px);
 }
 
@@ -2741,11 +2741,57 @@ label.error {
 .product-details {
   @include make-col();
   @include flex(1,1,100%);
+  padding: 0 rem(10px);
   @include media-breakpoint-up(md) {
     @include make-col-span(6);
   }
   @include media-breakpoint-up(xl) {
     @include make-col-span(5);
+  }
+  .section-header{
+    margin-bottom: 0;
+  }
+  .product-price {
+    font-size: rem(30px);
+    font-weight: bold;
+    margin-bottom: rem(10px);
+    display: block;
+    @include media-breakpoint-up(md) {
+      font-size: rem(36px);
+      margin-bottom: rem(30px);
+    }
+  }
+}
+
+.product-form {
+  margin-bottom: rem(10px);
+  @include media-breakpoint-up(md) {
+    margin-bottom: rem(40px);
+  }
+
+}
+.form-row {
+  @include flexbox;
+  @include align-items(center);
+  margin-bottom: rem(10px);
+  label {
+    @include flex(0,0,rem(80px));
+  }
+  input,
+  select {
+    @include flex(1);
+    @include media-breakpoint-up(md) {
+      max-width: rem(120px);
+    }
+  }
+}
+
+.buy-button {
+  @extend .button;
+  width: 100%;
+  @include media-breakpoint-up(md) {
+    padding: rem(15px);
+    max-width: rem(300px);
   }
 }
 
@@ -2823,6 +2869,11 @@ label.error {
 //============================================================================
 //  #Cart Page
 //============================================================================
+
+.cart-container {
+  @include make-container;
+  @include make-container-max-widths();
+}
 
 
 .cart__row {

@@ -1,17 +1,15 @@
 <!-- /templates/cart.liquid -->
 
+<div class="cart-container">
 {% for error in cart.errors %}
-  <p>{{ error.title }}</p>
+  <!-- <p class="errors">{{ error.title }}</p> -->
 {% endfor %}
 
 {% if cart.item_count > 0 %}
 
   <form action="{{ urls.cart_update }}" method="post" novalidate class="cart">
     <div class="section-header">
-      <h1>Shopping Bag</h1>
-      {% comment %}
       {{ 'cart.general.title' | t }}
-      {% endcomment %}
     </div>
 
     <div class="cart__row medium-down--hide cart__header-labels">
@@ -140,3 +138,4 @@
   <p>{{ 'cart.general.empty' | t }}</p>
   <p>{{ 'cart.general.continue_browsing_html' | t }}</p>
 {% endif %}
+</div>

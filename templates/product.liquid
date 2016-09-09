@@ -58,9 +58,9 @@
 
     {% if product.available %}
 
-      <form action="{{ urls.cart_add }}" method="post" enctype="multipart/form-data" id="AddToCartForm">
+      <form action="{{ urls.cart_add }}" method="post" enctype="multipart/form-data" id="AddToCartForm" class="product-form">
 
-        <span id="ProductPrice" class="h2{% if product.base_price > product.price %} on-sale{% endif %}" itemprop="price">
+        <span id="ProductPrice" class="product-price{% if product.base_price > product.price %} on-sale{% endif %}" itemprop="price">
           {{ product.price | money }}
         </span>
 
@@ -76,12 +76,14 @@
             Product option selectors
           {% endcomment %}
           {% for name, values in product.options %}
-            <label for="option-{{ name | md5 }}">{{ name|title }}</label>
-            <select id="option-{{ name | md5 }}" class="option-selector" style="width:100%;margin-bottom:10px;">
-            {% for value in values %}
-              <option value="{{ value | md5 }}">{{ value }}</option>
-            {% endfor %}
-            </select>
+            <div class="form-row">
+               <label for="option-{{ name | md5 }}">{{ name|title }}</label>
+               <select id="option-{{ name | md5 }}" class="option-selector">
+               {% for value in values %}
+                 <option value="{{ value | md5 }}">{{ value }}</option>
+               {% endfor %}
+               </select>
+            </div>
           {% endfor %}
 
           {% comment %}
@@ -157,10 +159,10 @@
           <input type="hidden" name="id" value="{{ product.master_variant.id }}" />
 
         {% endif %}
-
-        <label for="Quantity" class="quantity-selector">{{ 'products.product.quantity' | t }}</label>
-        <input type="number" id="Quantity" name="quantity" value="1" min="1" class="quantity-selector">
-
+        <div class="form-row">
+          <label for="Quantity" class="quantity-selector">{{ 'products.product.quantity' | t }}</label>
+          <input type="number" id="Quantity" name="quantity" value="1" min="1" class="quantity-selector">
+        </div>
         <button type="submit" name="add" id="X_AddToCart" class="buy-button">
           {{ 'products.product.add_to_cart' | t }} <!-- Buy Now -->
         </button>
@@ -173,8 +175,6 @@
     {% endif %}
 
       </div>
-
-      <hr>
 
       <div class="product-description rte" itemprop="description">
         {{ product.description }}
