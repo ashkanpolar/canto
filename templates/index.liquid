@@ -5,17 +5,31 @@
 
 {% comment %}Homepage Banner{% endcomment %}
 {% if settings.home_banner_use_image %}
-  <div class="main-banner"><a href="{{ settings.main_banner_handle }}"><img src="{{ 'home_banner.png' | asset_url }}" itemprop="home_banner" width="100%"></a></div>
+  <div class="main-banner">
+    <a class="banner-image" href="{{ settings.main_banner_handle }}">
+      <picture>
+        <source srcset="{{ 'home_banner.png' | asset_url }}" media="(min-width: 48rem)">
+        <img src="{{ 'home_banner_mobile.png' | asset_url }}" itemprop="home_banner">
+      </picture>
+    </a>
+    <a class="button banner-button" href="{{ settings.main_banner_handle }}">{{ settings.main_banner_cta }}</a>
+  </div>
 {% endif %}
 
 {% if settings.secondary_banner_on %}
 
 <div class="secondary-banners">
     {% if settings.secondary_banner_en_1 %}
-    <div><a href="{{ settings.secondary_banner_handle_1 }}"><img src="{{ 'secondary_banner_img_1.jpg' | asset_url }}" /></a></div>
+    <div>
+      <a href="{{ settings.secondary_banner_handle_1 }}"><img src="{{ 'secondary_banner_img_1.jpg' | asset_url }}" /></a>
+      <a class="button banner-button" href="{{ settings.secondary_banner_handle_1 }}">{{ settings.secondary_banner_cta_1 }}</a>
+    </div>
     {% endif %}
     {% if settings.secondary_banner_en_2 %}
-    <div><a href="{{ settings.secondary_banner_handle_2 }}"><img src="{{ 'secondary_banner_img_2.jpg' | asset_url }}" /></a></div>
+    <div>
+      <a href="{{ settings.secondary_banner_handle_2 }}"><img src="{{ 'secondary_banner_img_2.jpg' | asset_url }}" /></a>
+      <a class="button banner-button" href="{{ settings.secondary_banner_handle_1 }}">{{ settings.secondary_banner_cta_2 }}</a>
+    </div>
     {% endif %}
 </div>
 

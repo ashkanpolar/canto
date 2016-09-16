@@ -1,7 +1,5 @@
 <!doctype html>
-<!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
-<!--[if IE 7]><html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if lt IE 9]><html class="no-js lt-ie9" lang="en"> <![endif]-->
 <!--[if IE 9 ]><html class="ie9 no-js"> <![endif]-->
 <!--[if (gt IE 9)|!(IE)]><!--> <html class="no-js"> <!--<![endif]-->
 <head>
@@ -35,18 +33,6 @@
 
   {{ 'https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js' | script_tag }}
   {{ 'modernizr.min.js' | asset_url | script_tag }}
-
-
-  <!-- Flexslider ================================================== -->
- <!-- {{ "jquery.flexslider-min.js" | asset_url | script_tag }}
-  {{ 'flexslider.css' | asset_url | stylesheet_tag }}
-  <script>
-    $(window).load(function() {
-      $('.flexslider').flexslider({
-        animation: "slide"
-      });
-    });
-  </script> -->
 
   {% if store.google_analytics %}
   <script>
@@ -128,89 +114,6 @@
     <!-- //mobile-nav -->
   </div>
 
-  <div id="CartDrawer" class="drawer drawer--right">
-    <div class="drawer__header">
-      <div class="drawer__title h3">{{ 'cart.general.title' | t }}</div>
-      <div class="drawer__close js-drawer-close">
-        <button type="button" class="icon-fallback-text">
-          <span class="icon icon-x" aria-hidden="true"></span>
-          <span class="fallback-text">{{ 'cart.general.close_cart' | t | json }}</span>
-        </button>
-      </div>
-    </div>
-    <div id="CartContainer">
-
-    <!--- cart items begin -->
-    {% if cart.item_count > 0 %}
-    <form action="{{ urls.cart_update }}" method="post" novalidate="" class="cart">
-      <div class="ajaxcart__inner">
-        {% for item in cart.items %}
-        <div class="ajaxcart__product">
-          <div class="ajaxcart__row">
-            <div class="grid">
-              <div class="grid__item one-quarter">
-                <a href="{{ item.product.url }}" class="ajaxcart__product-image"><img src="{{ item | img_url: 'small' }}" alt=""></a>
-              </div>
-              <div class="grid__item three-quarters">
-                <p>
-                  <a href="{{ item.product.url }}" class="ajaxcart__product-name">{{ item.product.name }}</a>
-                    {% if item.variant %}
-                    <span class="ajaxcart__product-meta">{{ item.variant.title }}</span>
-                    {% endif %}
-                </p>
-
-              </div>
-            </div>
-            <div class="grid--full">
-                  <div class="grid__item one-third">
-                   <a href="{{ urls.cart_edit }}?id={{ item.id }}&quantity=0" class="cart__remove" data-id="{{ item.id }}"><small>{{ 'cart.general.remove' | t }}</small></a>
-                  </div>
-
-                  <div class="grid__item one-third">
-                    <div class="ajaxcart__qty">
-                       <input type="number" name="items[{{ item.id }}][quantity]" id="updates_{{ item.id }}" value="{{ item.quantity }}" min="0" data-id="{{ item.id }}">
-                    </div>
-                  </div>
-                  <div class="grid__item one-third text-right">
-                    {{ item.price | money }}
-                  </div>
-            </div>
-          </div>
-        </div>
-        {% endfor %}
-      </div>
-      <div class="ajaxcart__footer">
-        <div class="grid--full">
-          <div class="grid__item two-thirds">
-            <p>{{ 'cart.label.total' | t }}</p>
-          </div>
-          <div class="grid__item one-third text-right">
-            <p>{{ cart.total_price | money }}</p>
-          </div>
-        </div>
-        <p class="text-center">{{ 'cart.general.shipping_at_checkout' | t }}</p>
-
-        <button type="submit" class="btn btn--full btn--secondary update-cart" name="update" style="margin-bottom:10px;">
-          {{ 'cart.general.update' | t }}
-        </button>
-
-        <button type="submit" class="btn btn--full cart__checkout" name="checkout">
-          {{ 'cart.general.checkout' | t }}
-        </button>
-      </div>
-    </form>
-
-    {% else %}
-
-    {{ 'cart.general.empty' | t }}
-
-    {% endif %}
-
-    <!-- cart ends -->
-
-    </div>
-  </div>
-
 <!-- END MOBILE NAV  -->
 
 <header class="site-header{% if template == 'index' %} transparent{% endif %}" role="banner">
@@ -247,11 +150,60 @@
   <div class="header-search">
     {% include 'search-bar' %}
   </div>
-  <div class="cart-toggle">
+  <div class="cart-toggle has-dropdown">
     <a href="{{ urls.cart }}" class="toggle js-drawer-open-right" aria-controls="CartDrawer" aria-expanded="false">
       <span class="icon" aria-hidden="true"></span>
       <span class="text">Shopping Bag</span>
     </a>
+
+    <div id="CartDropdown" class="cart-dropdown">
+      <div class="dropdown-close">
+        <button type="button" class="icon-fallback-text">
+          <span class="icon icon-x" aria-hidden="true"></span>
+          <span class="fallback-text">{{ 'cart.general.close_cart' | t }}</span>
+        </button>
+      </div>
+      <div id="CartDropdownContainer" class="cart-dropdown-content">
+      <!--- cart items begin -->
+      {% if cart.item_count > 0 %}
+        {% for item in cart.items %}
+        <div class="cart-dropdown-row">
+          <div class="cart-dropdown-thumb">
+            <a href="{{ item.product.url }}"><img src="{{ item | img_url: 'small' }}" alt="{{ item.product.name }}"></a>
+          </div>
+          <div class="cart-dropdown-product-details">
+            {% comment %}<input type="number" name="items[{{ item.id }}][quantity]" id="updates_{{ item.id }}" value="{{ item.quantity }}" min="0" data-id="{{ item.id }}">{% endcomment %}
+            <a href="{{ item.product.url }}" class="product-name">{{ item.product.name }}</a>
+            {% unless item.variant.name contains 'Default' %}
+            <small>{{ item.variant.name }}</small>
+            {% endunless %}
+            <a class="button-remove" href="{{ urls.cart_edit }}?id={{ item.id }}&quantity=0" data-id="{{ item.id }}">
+              <span class="icon" aria-hidden="true"></span>
+              <span class="fallback-text">{{ 'cart.general.remove' | t }}</span>
+            </a>
+          </div>
+          <div class="cart-dropdown-qty">
+            <span class="qty"> x {{ item.quantity }}</span>
+          </div>
+          <div class="cart-dropdown-product-subtotal">
+            {{ item.price | money }}
+          </div>
+        </div>
+        {% endfor %}
+        <div class="cart-dropdown-summary">
+          <span class="cart-subtotal-title">{{ 'cart.label.total' | t }}</span>
+          <span class="cart-subtotal-value">{{ cart.total_price | money }}</span>
+        </div>
+        <a href="{{ urls.cart }}" class="button">
+          {{ 'cart.general.view_cart' | t }}
+        </a>
+      </div>
+      {% else %}
+        {{ 'cart.general.empty' | t }}
+      {% endif %}
+      <!-- cart ends -->
+      </div>
+    </div>
   </div>
   {% comment %}
   <!-- Remove cart-link -->
