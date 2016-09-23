@@ -52,73 +52,77 @@
 
 <!-- MOBILE NAV BEGINS -->
 
-  <div id="NavDrawer" class="drawer drawer--left">
-    <div class="drawer__header">
-      <div class="drawer__title h3">{{ 'layout.drawers.browse' | t }}</div>
-      <div class="drawer__close js-drawer-close">
-        <button type="button" class="icon-fallback-text">
-          <span class="icon icon-x" aria-hidden="true"></span>
-          <span class="fallback-text">{{ 'layout.drawers.close_menu' | t }}</span>
-        </button>
-      </div>
+  <div id="NavDrawer" class="mobile-nav-container drawer drawer--left">
+    <div class="drawer__close js-drawer-close">
+      <button type="button" class="button-close">
+        <span class="icon" aria-hidden="true"></span>
+        <span class="fallback-text">{{ 'layout.drawers.close_menu' | t }}</span>
+      </button>
     </div>
     <!-- begin mobile-nav -->
-    <ul class="mobile-nav">
-      <li class="mobile-nav__item mobile-nav__search">
+    <div class="mobile-nav-main">
+
+      <div class="mobile-nav-search">
         {% include 'search-bar' %}
-      </li>
+      </div>
+
+      <ul class="mobile-menu">
       {% for link in navigation.main-menu.links %}
         {% assign child_list_handle = link.url | handleize %}
         {% if navigation[child_list_handle].links != blank %}
-          <li class="mobile-nav__item{% if link.active %} mobile-nav__item--active{% endif %}" aria-haspopup="true">
-            <div class="mobile-nav__has-sublist">
-              <a  class="mobile-nav__link">{{ link.name }}</a>
-              <div class="mobile-nav__toggle">
-                <button type="button" class="icon-fallback-text mobile-nav__toggle-open">
-                  <span class="icon icon-plus" aria-hidden="true"></span>
-                  <span class="fallback-text">See More</span>
-                </button>
-                <button type="button" class="icon-fallback-text mobile-nav__toggle-close">
-                  <span class="icon icon-minus" aria-hidden="true"></span>
-                  <span class="fallback-text">{{ 'cart.general.close_cart' | t | json }}</span>
-                </button>
-              </div>
-            </div>
-            <ul class="mobile-nav__sublist">
+          <li aria-haspopup="true">
+            <a  href="{{ link.url }}">{{ link.name }}</a>
+            <ul>
               {% for childlink in navigation[child_list_handle].links %}
-                <li class="mobile-nav__item {% if childlink.active %} mobile-nav__item--active{% endif %}">
-                  <a href="{{ childlink.url }}" class="mobile-nav__link">{{ childlink.name | escape }}</a>
-                </li>
+              <li>
+                <a href="{{ childlink.url }}">{{ childlink.name | escape }}</a>
+              </li>
               {% endfor %}
             </ul>
           </li>
         {% else %}
-          <li class="mobile-nav__item{% if link.active %} mobile-nav__item--active{% endif %}">
-            <a href="{{ link.url }}" class="mobile-nav__link">{{ link.name }}</a>
+          {% if link.name == 'Collection' %}
+            <li>
+              <a href="{{ link.url }}">{{ link.name }}</a>
+              <ul>
+                {% for link in navigation.collection.links %}
+                  <li>
+                    <a href="{{ link.url }}">{{ link.name }}</a>
+                  </li>
+                {% endfor %}
+              </ul>
+            </li>
+          {% else %}
+          <li>
+            <a href="{{ link.url }}">{{ link.name }}</a>
           </li>
+          {% endif %}
         {% endif %}
       {% endfor %}
-    {% if customer %}
-      <li class="mobile-nav__item">
-        <a href="{{ urls.account_logout }}">{{ 'layout.customer.log_out' | t }}</a>
-      </li>
-    {% else %}
-      <li class="mobile-nav__item">
-        <a href="{{ urls.account_login }}">{{ 'layout.customer.log_in' | t }}</a>
-      </li>
-      <li class="mobile-nav__item">
-        <a href="{{ urls.account_register }}">{{ 'layout.customer.create_account' | t }}</a>
-      </li>
-    {% endif %}
-    </ul>
+        <li>
+          <a href="{{ urls.cart }}">{{ 'cart.general.title' | t }}</a>
+        </li>
+      {% if customer %}
+        <li>
+          <a href="{{ urls.account_logout }}">{{ 'layout.customer.log_out' | t }}</a>
+        </li>
+      {% comment %}{% else %}{% endcomment %}
+        <li>
+          <a href="{{ urls.account_login }}">{{ 'layout.customer.log_in' | t }}</a>
+        </li>
+        <li>
+          <a href="{{ urls.account_register }}">{{ 'layout.customer.create_account' | t }}</a>
+        </li>
+      {% endif %}
+      </ul>
     <!-- //mobile-nav -->
   </div>
-
+</div>
 <!-- END MOBILE NAV  -->
 
 <header class="site-header{% if template == 'index' %} transparent{% endif %}" role="banner">
   <div class="menu-toggle">
-    <button type="button" class="toggle js-drawer-open-left" aria-controls="NavDrawer" aria-expanded="false">
+    <button type="button" class="toggle nav-show" aria-controls="NavDrawer" aria-expanded="false">
       <span class="icon" aria-hidden="true"></span>
       <span class="fallback-text">{{ 'layout.navigation.menu' | t }}</span>
     </button>
@@ -131,7 +135,7 @@
     {% endif %}
       {% if settings.logo_use_image %}
         <a href="/" itemprop="url">
-          <img src="{{ 'logo.png' | asset_url }}" alt="{{ store.name }}" itemprop="logo">
+          <img src="{{ 'logo.svg' | asset_url }}" alt="{{ store.name }}" itemprop="logo">
         </a>
       {% else %}
         <a href="/" itemprop="url">{{ store.name }}</a>
@@ -177,6 +181,8 @@
             {% unless item.variant.name contains 'Default' %}
             <small>{{ item.variant.name }}</small>
             {% endunless %}
+          </div>
+          <div class="cart-dropdown-actions">
             <a class="button-remove" href="{{ urls.cart_edit }}?id={{ item.id }}&quantity=0" data-id="{{ item.id }}">
               <span class="icon" aria-hidden="true"></span>
               <span class="fallback-text">{{ 'cart.general.remove' | t }}</span>

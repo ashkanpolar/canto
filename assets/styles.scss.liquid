@@ -96,10 +96,13 @@ $colorBtnPrimaryHover: lighten($colorSecondary, 10%);
 $colorBtnPrimaryActive: $colorBtnPrimaryHover;
 $colorBtnPrimaryText: {{ settings.color_primary }};
 
-$colorBtnSecondary: $colorSecondary;
+$colorBtnSecondary: $colorPrimary;
 $colorBtnSecondaryHover: darken($colorBtnSecondary, 10%);
 $colorBtnSecondaryActive: darken($colorBtnSecondaryHover, 10%);
-$colorBtnSecondaryText: {{ settings.color_primary }};
+$colorBtnSecondaryText: {{ settings.color_navigation_bg }}; // FIX THIS IMMEDIATELY {{ settings.color_primary }}
+
+$colorIconStroke: {{ settings.color_icon_stroke }};
+$colorIconFill: {{ settings.color_icon_fill }};
 
 // Text link colors
 $colorLink: {{ settings.color_body_text }};
@@ -1374,6 +1377,10 @@ html input[disabled] {
   width: 100%;
 }
 
+.button-close {
+  @include iconBtn('{{ "icon-close.svg" | asset_url }}');
+}
+
 //================ Force an input/button to look like a text link ================
 .text-link {
   display: inline;
@@ -1873,6 +1880,7 @@ label.error {
   @include flexbox;
   @include flex-flow();
   background: #fff;
+  background: rgba(#fff, 0.975);
 
   @include media-breakpoint-up(md) {
     padding: ($gutter / 4) 0;
@@ -1883,6 +1891,7 @@ label.error {
 
   &.transparent {
     background: transparent;
+    background: rgba(#fff, 0);
   }
 }
 
@@ -1952,10 +1961,10 @@ label.error {
       text-transform: uppercase;
       font-weight: bold;
       padding: rem(10px) 0;
-      margin-right: rem(10px);
     }
     @include media-breakpoint-up(sm) {
       display: flex;
+      padding-right: rem(10px);
       .text {
         display: block;
       }
@@ -1963,10 +1972,10 @@ label.error {
 
     @include media-breakpoint-up(lg) {
       .icon {
-        background-position: center bottom rem(4px);
+        background-position: center bottom rem(2px);
       }
       .text {
-        padding: rem(18px) 0 rem(2px);
+        padding: rem(20px) 0 0;
       }
     }
   }
@@ -1974,7 +1983,7 @@ label.error {
 
 //================ Header Search ================
 .header-search {
-  max-width: rem(220px);
+  max-width: rem(180px);
   margin-left: auto;
   width: 100%;
   display: none;
@@ -1983,8 +1992,8 @@ label.error {
     display: block;
   }
   @include media-breakpoint-up(lg) {
-    margin-top: rem(5px);
-    margin-bottom: rem(-5px);
+    margin-top: rem(8px);
+    margin-bottom: rem(-8px);
   }
 }
 
@@ -1995,7 +2004,7 @@ label.error {
 
   .search {
     width: 100%;
-    padding: rem(10px) rem(10px) rem(9px) rem(50px);
+    padding: rem(10px) rem(10px) rem(9px) rem(40px);
     background: transparent;
     border: none;
     border-bottom: rem(1px) solid $colorBorder;
@@ -2070,13 +2079,38 @@ label.error {
 //================ Dropdowns ================
 .has-dropdown {
   position: relative;
+  @include media-breakpoint-up(md){
+    > a {
+      background:{
+        image: url('{{ "icon-dropdown.svg" | asset_url }}');
+        repeat: no-repeat;
+        position: right rem(10px) center;
+        color: transparent;
+        padding-right: rem(30px);
+      };
+    }
+  }
 
-  &:hover,
+  .supports-no-touch &:hover,
   &.show,
   &.focus{
     background-color: $colorNav;
+    background-color: rgba($colorNav, 0.975);
   }
-}
+
+  //Specificity for cart togle and menu dropdown until better solution is found
+  &.cart-toggle > a,
+  .site-nav & > a {
+    @include media-breakpoint-up(md) {
+      padding-right: rem(30px);
+    }
+    @include media-breakpoint-up(lg) {
+      background-position: right rem(10px) bottom rem(6px);
+    }
+  }
+
+
+  }
 
 .dropdown {
   display: none;
@@ -2088,6 +2122,7 @@ label.error {
   text-align: center;
   padding: rem(10px) rem(5px);
   background-color: $colorNav;
+  background-color: rgba($colorNav, 0.975);
 
   .supports-no-touch .has-dropdown:hover &,
   .show &,
@@ -2112,6 +2147,7 @@ label.error {
   width: rem(420px);
   padding: rem(10px);
   background-color: $colorNav;
+  background-color: rgba($colorNav, 0.975);
 
   .supports-no-touch .has-dropdown:hover &,
   .show &,
@@ -2141,6 +2177,10 @@ label.error {
   @include flex(1);
 }
 
+.cart-dropdown-actions {
+  @include flex(0,0,rem(40px));
+}
+
 .cart-dropdown-qty {
   @include flex(0,0,rem(30px));
 }
@@ -2165,140 +2205,9 @@ label.error {
 
 //============================================================================
 //  #Mobile Nav
-//  - List of items inside the mobile drawer
 //============================================================================
-.mobile-nav {
-  // Negative of .drawer left/right padding for full-width link tap area
-  margin: (-$gutter / 2) (-$gutter / 2) 0 (-$gutter / 2);
 
-  li {
-    margin-bottom: 0;
-  }
-}
-
-.mobile-nav__search {
-  padding: $gutter / 2;
-
-  .search-bar {
-    margin-bottom: 0;
-  }
-}
-
-.mobile-nav__item {
-  position: relative;
-  display: block;
-
-  // Background color on top level items so there is no
-  // element overlap on subnav's CSS toggle animation
-  .mobile-nav > & {
-    background-color: $colorDrawers;
-  }
-
-  &:after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: $gutter / 2;
-    right: $gutter / 2;
-    border-bottom: rem(1px) solid $colorDrawerBorder;
-  }
-
-  .mobile-nav > &:last-child:after {
-    display: none;
-  }
-}
-
-// Login/logout links can't have a class on them, so style <a> element
-.mobile-nav__item a {
-  display: block;
-}
-
-.mobile-nav__item a,
-.mobile-nav__toggle button {
-  color: $colorDrawerText;
-  padding: $gutter / 2;
-  text-decoration: none;
-
-  &:hover,
-  &:active,
-  &:focus {
-    color: darken($colorDrawerText, 15%);
-  }
-
-  &:active,
-  &:focus {
-    background-color: darken($colorDrawers, 5%);
-  }
-}
-
-.mobile-nav__item--active {
-  font-weight: bold;
-}
-
-.mobile-nav__has-sublist {
-  display: table;
-  width: 100%;
-
-  .mobile-nav__link {
-    display: table-cell;
-    vertical-align: middle;
-    width: 100%;
-  }
-}
-
-.mobile-nav__toggle {
-  display: table-cell;
-  vertical-align: middle;
-  width: 1%;
-}
-
-.mobile-nav__toggle-open {
-  .mobile-nav--expanded & {
-    display: none;
-  }
-}
-
-.mobile-nav__toggle-close {
-  display: none;
-
-  .mobile-nav--expanded & {
-    display: block;
-  }
-}
-
-.mobile-nav__sublist {
-  margin: 0;
-  max-height: 0;
-  visibility: hidden;
-  overflow: hidden;
-  @include backface(hidden);
-  @include transition(all 300ms cubic-bezier(0.57, 0.06, 0.05, 0.95));
-
-  .mobile-nav--expanded + & {
-    visibility: visible;
-    max-height: rem(700px);
-    @include transition(all 700ms cubic-bezier(0.57, 0.06, 0.05, 0.95));
-  }
-
-  .mobile-nav__item:after {
-    top: 0;
-    bottom: auto;
-  }
-
-  .mobile-nav__link {
-    padding-left: $gutter;
-    font-weight: normal;
-  }
-}
-
-//============================================================================
-//  #Drawers
-//============================================================================
-.js-drawer-open {
-  overflow: hidden;
-}
-
-.drawer {
+.mobile-nav-container {
   display: none;
   position: fixed;
   overflow-y: auto;
@@ -2306,113 +2215,73 @@ label.error {
   -webkit-overflow-scrolling: touch;
   top: 0;
   bottom: 0;
-  padding: 0 ($gutter / 2) ($gutter / 2);
-  max-width: 95%;
+  left: 0;
+  right: 0;
+  width: 100%;
   z-index: $zindexDrawer;
-  color: $colorDrawerText;
-  background-color: $colorDrawers;
-  @include transition($drawerTransition);
+  background-color: $colorNav;
+  background-color: rgba($colorNav, 0.975);
+  //@include transition($drawerTransition);
+  @include flex-flow(row-wrap);
+  @include align-items(center);
+  &.show {
+    display: flex;
+  }
 
   a {
-    color: $colorDrawerText;
-
-    &:hover,
-    &:focus {
-      opacity: 0.7;
-    }
+    color: $colorNavText;
   }
 
   input,
   textarea {
-    border-color: $colorDrawerBorder;
+    border-color: $colorBorder;
+  }
+
+  .button-close {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 10;
   }
 }
 
-.drawer--left {
-  width: $drawerNavWidth;
-  left: -$drawerNavWidth;
-  border-right: rem(1px) solid $colorDrawerBorder;
-
-  .js-drawer-open-left & {
-    display: block;
-    @include transform(translateX($drawerNavWidth));
-
-    .lt-ie9 & {
-      left: 0;
-    }
-  }
-}
-
-.drawer--right {
-  width: $drawerCartWidth;
-  right: -$drawerCartWidth;
-  border-left: rem(1px) solid $colorDrawerBorder;
-
-  .js-drawer-open-right & {
-    display: block;
-    @include transform(translateX(-$drawerCartWidth));
-
-    .lt-ie9 & {
-      right: 0;
-    }
-  }
-}
-
-#PageContainer {
-  overflow: hidden;
-}
-
-.is-moved-by-drawer {
-  .js-drawer-open-left & {
-    @include transform(translateX($drawerNavWidth));
-    @include transition($drawerTransition);
-  }
-
-  .js-drawer-open-right & {
-    @include transform(translateX(-$drawerCartWidth));
-    @include transition($drawerTransition);
-  }
-}
-
-.is-moved-by-drawer.is-transitioning {
-  @include transition($drawerTransition);
-}
-
-.drawer__header {
-  display: table;
-  height: rem(70px);
+.mobile-nav-main {
+  margin: rem(10px) auto;
   width: 100%;
-  margin-bottom: $gutter / 2;
-  border-bottom: rem(1px) solid $colorDrawerBorder;
+  max-width: rem(400px);
+  @include media-breakpoint-up(md) {
+    padding: rem(20px);
+  }
 }
 
-.drawer__title,
-.drawer__close {
-  display: table-cell;
-  vertical-align: middle;
-}
-
-.drawer__title {
-  width: 100%;
-}
-
-.drawer__close {
-  width: 1%;
-  text-align: center;
-  font-size: rem(18px);
-}
-
-.drawer__close button {
-  position: relative;
-  right: rem(-20px);
-  height: 100%;
+.mobile-nav-search {
+  margin-bottom: rem(10px);
   padding: 0 rem(20px);
-  color: inherit;
+}
 
-  &:active,
-  &:focus {
-    background-color: darken($colorDrawers, 5%);
+.mobile-menu {
+  margin: 0;
+  list-style: none;
+  text-align: center;
+  li {
+    margin-bottom: 0;
+    a {
+      display: inline-block;
+      padding: rem(10px);
+    }
   }
+  > li > a {
+    text-transform: uppercase;
+    font-weight: bold;
+  }
+  ul {
+    margin: rem(5px) 0;
+    list-style: none;
+    a {
+      padding: rem(5px);
+    }
+  }
+
 }
 
 //============================================================================
@@ -2817,9 +2686,39 @@ label.error {
     }
   }
   .thumbnails {
-    margin: 0;
+    margin: rem(10px) 0;
+    width: 100%;
     @include make-col();
     list-style: none;
+    @include flexbox;
+    @include justify-content(center);
+
+    @include media-breakpoint-up(xl) {
+      margin: 0;
+      @include flex-flow(column nowrap);
+      @include justify-content(flex-start);
+
+    }
+
+    li {
+      margin-bottom: 0;
+      @include flex(0,0,rem(60px));
+
+      @include media-breakpoint-up(lg) {
+        @include flex(0,0,rem(90px));
+        margin-right: rem(10px);
+      }
+      @include media-breakpoint-up(xl) {
+        @include flex(0);
+        margin-bottom: rem(20px);
+        margin-right:0;
+      }
+    }
+
+    .thumb, img {
+      display: block;
+    }
+
   }
 
   &.has-thumbnails {
@@ -3108,215 +3007,3 @@ label.error {
     }
   }
 }
-
-.cart__row {
-  position: relative;
-  margin-top: $gutter;
-  padding-top: $gutter;
-  border-top: rem(1px) solid $colorBorder;
-
-  &:first-child {
-    margin-top: 0;
-  }
-
-  &:first-child {
-    padding-top: 0;
-    border-top: 0 none;
-  }
-
-  .js-qty {
-    margin: 0 auto;
-  }
-}
-
-@include media-breakpoint-up (lg) {
-  .cart__row--table-large {
-    display: table;
-    table-layout: fixed;
-    width: 100%;
-
-    .grid__item {
-      display: table-cell;
-      vertical-align: middle;
-      float: none;
-    }
-  }
-}
-
-.cart__image {
-  display: block;
-
-  img {
-    display: block;
-  }
-}
-
-.cart__subtotal {
-  margin: 0 0 0 ($gutter / 3);
-  display: inline;
-}
-
-.cart__mini-labels {
-  display: block;
-  margin: ($gutter / 3) 0;
-  font-size: rem(12px);
-
-  @include media-breakpoint-up (lg) {
-    display: none;
-  }
-}
-
-.cart__remove {
-  display: block;
-}
-
-.cart__note-add.is-hidden {
-  display: none;
-}
-
-.cart__note {
-  display: none;
-
-  &.is-active {
-    display: block;
-  }
-}
-
-{% if settings.ajax_cart_enable %}
-//============================================================================
-//  #Ajax Cart Styles (conditionally loaded)
-//============================================================================
-
-.ajaxcart__inner {
-  margin-bottom: $gutter;
-}
-
-.ajaxcart__row {
-  > .grid {
-    margin-left: -$gutter / 2;
-
-    > .grid__item {
-      padding-left: $gutter / 2;
-    }
-  }
-}
-
-.ajaxcart__product {
-  position: relative;
-  max-height: rem(500px);
-
-  &.is-removed {
-    max-height: 0;
-    overflow: hidden;
-    visibility: hidden;
-    @include backface(hidden);
-    @include transition(all 450ms cubic-bezier(0.57,.06,.05,.95));
-  }
-}
-
-.ajaxcart__row {
-  padding-bottom: $gutter / 2;
-  margin-bottom: $gutter / 2;
-  border-bottom: rem(1px) solid $colorDrawerBorder;
-}
-
-.ajaxcart__product-image {
-  display: block;
-  overflow: hidden;
-  margin-bottom: rem(15px);
-
-  img {
-    display: block;
-    margin: 0 auto;
-    max-width: 100%;
-  }
-}
-
-.ajaxcart__product-name,
-.ajaxcart__product-meta {
-  display: block;
-}
-
-.ajaxcart__product-name + .ajaxcart__product-meta {
-  padding-top: $gutter / 5;
-}
-
-//================ Quantity Selectors ================
-.js-qty {
-  position: relative;
-  margin-bottom: 1rem;
-  max-width: rem(100px);
-  min-width: rem(75px);
-  overflow: visible;
-
-  input {
-    display: block;
-    background: none;
-    text-align: center;
-    width: 100%;
-    padding: rem(5px) rem(25px);
-    margin: 0;
-  }
-}
-
-.js-qty__adjust {
-  cursor: pointer;
-  position: absolute;
-  display: block;
-  top: 0;
-  bottom: 0;
-  border: 0 none;
-  padding: 0 rem(8px);
-  background: none;
-  text-align: center;
-  overflow: hidden;
-  @include prefix('user-select', 'none');
-
-  &:hover,
-  &:focus {
-    color: $colorPrimary;
-  }
-}
-
-.js-qty__adjust--plus {
-  right: 0;
-  border-left: rem(1px) solid $colorBorder;
-}
-
-.js-qty__adjust--minus {
-  left: 0;
-  border-right: rem(1px) solid $colorBorder;
-}
-
-//================ Quantity Selectors in Ajax Cart ================
-.ajaxcart__qty {
-  @extend .js-qty;
-  margin: 0;
-
-  .is-loading & {
-    opacity: 0.5;
-    @include transition(none);
-  }
-}
-
-.ajaxcart__qty-num {
-  border-color: $colorDrawerBorder;
-  color: $colorDrawerText;
-}
-
-.ajaxcart__qty-adjust {
-  @extend .js-qty__adjust;
-  color: $colorDrawerText;
-}
-
-.ajaxcart__qty--plus {
-  @extend .js-qty__adjust--plus;
-  border-color: $colorDrawerBorder;
-}
-
-.ajaxcart__qty--minus {
-  @extend .js-qty__adjust--minus;
-  border-color: $colorDrawerBorder;
-}
-
-{% endif %} // settings.ajax_cart_enable
