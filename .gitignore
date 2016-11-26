@@ -1,4 +1,4 @@
 .idea/
 *.zip
 .DS_store
-*.css
+styles.css
