@@ -33,13 +33,13 @@
 //==============================================================================
 
 // Convert all Pixel Values to rem
-$baseFontSize: 16px; // Henceforth known as 1em/rem
+$baseFontSize: 16px;
 @function rem($target) {
   @if $target == 0 {
     @return 0;
   }
   @return $target / $baseFontSize + 0rem;
-};
+}
 
 // Grid breakpoints
 //
